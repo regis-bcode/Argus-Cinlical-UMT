@@ -3,413 +3,1432 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AGF — G5 Implantação (Exportável para PDF)</title>
+  <title>Fluxo de Atendimento — Emissão de Senhas, Painéis, Registro e Encaminhamento</title>
+
+  <!-- Icons (Font Awesome) -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
   <style>
-    /* ====== Base / Reset leve ====== */
-    * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      color: #0b1b2b;
-      background: #ffffff;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-
-    /* ====== Tokens (paleta/branding) ====== */
     :root{
-      --bg-1: #061a2a;
-      --bg-2: #0b2f4a;
-      --accent: #1d86d6;
-      --accent-2: #62c7d6;
-      --text: #0b1b2b;
-      --muted: #5c6b79;
-      --card: #ffffff;
-      --line: #e6edf3;
-      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --bg: #070A10;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.08);
+      --stroke: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.86);
+      --muted: rgba(255,255,255,.62);
+      --soft: rgba(255,255,255,.12);
+      --accent: #7C5CFF;
+      --accent2: #29D3FF;
+      --good: #2EE59D;
+      --warn: #FFCC66;
+      --bad: #FF5C7A;
+      --shadow: 0 24px 60px rgba(0,0,0,.55);
       --radius: 18px;
+      --radius2: 26px;
+      --max: 1180px;
+      --glass: saturate(130%) blur(16px);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
 
-    /* ====== Layout ====== */
-    .page {
-      width: 210mm;          /* A4 */
-      min-height: 297mm;     /* A4 */
-      margin: 0 auto;
-      padding: 14mm 14mm 16mm;
-      position: relative;
-      page-break-after: always;
-      overflow: hidden;
-    }
-
-    /* Fundo com gradiente (fica bonito no PDF quando imprime com “gráficos de fundo”) */
-    .page--cover,
-    .page--dark {
-      color: #ffffff;
-      background:
-        radial-gradient(1200px 700px at 25% 20%, rgba(98,199,214,.22), rgba(0,0,0,0) 55%),
-        radial-gradient(900px 600px at 80% 65%, rgba(29,134,214,.22), rgba(0,0,0,0) 55%),
-        linear-gradient(160deg, var(--bg-1), var(--bg-2));
-    }
-
-    /* Cabeçalho fixo por página (não é “sticky” no PDF, mas mantém padrão) */
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10mm;
-      padding: 10mm 10mm;
-      border-radius: var(--radius);
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      backdrop-filter: blur(6px);
-    }
-    .header.light {
-      background: #ffffff;
-      border: 1px solid var(--line);
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: var(--sans);
+      background: radial-gradient(1200px 700px at 12% 8%, rgba(124,92,255,.28), transparent 55%),
+                  radial-gradient(900px 600px at 92% 18%, rgba(41,211,255,.20), transparent 55%),
+                  radial-gradient(700px 420px at 55% 92%, rgba(46,229,157,.18), transparent 55%),
+                  linear-gradient(180deg, #050812, #04050B 35%, #04040A 100%);
       color: var(--text);
+      overflow-x:hidden;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:var(--max); margin:0 auto; padding: 0 20px}
+    .topbar{
+      position: sticky; top:0; z-index:50;
+      backdrop-filter: var(--glass);
+      background: rgba(7,10,16,.72);
+      border-bottom: 1px solid var(--stroke);
     }
-    .brand-badge {
-      width: 14mm;
-      height: 14mm;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: var(--shadow);
-      flex: 0 0 auto;
-    }
-    .brand-title {
-      line-height: 1.05;
-      font-weight: 800;
-      letter-spacing: .3px;
-      font-size: 14pt;
-      margin: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .brand-subtitle {
-      margin: 2px 0 0;
-      font-size: 9.5pt;
-      color: rgba(255,255,255,.78);
-    }
-    .header.light .brand-subtitle { color: var(--muted); }
-
-    .meta {
-      text-align: right;
-      font-size: 9.5pt;
-      color: rgba(255,255,255,.78);
-    }
-    .header.light .meta { color: var(--muted); }
-
-    .content {
-      padding: 10mm 2mm 0;
+    .topbar .row{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 12px 0;
+      gap: 14px;
     }
 
-    /* ====== Tipografia ====== */
-    h1, h2, h3 { margin: 0 0 10px; }
-    h1 { font-size: 30pt; letter-spacing: .2px; }
-    h2 { font-size: 18pt; }
-    h3 { font-size: 12.5pt; }
-    p  { margin: 0 0 10px; font-size: 11pt; line-height: 1.5; }
-    .muted { color: var(--muted); }
-    .kicker {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.10);
+    .brand{
+      display:flex; align-items:center; gap: 12px; min-width: 240px;
+    }
+    .brand .logo{
+      width: 38px; height: 38px; border-radius: 14px;
+      background:
+        radial-gradient(14px 14px at 30% 30%, rgba(255,255,255,.55), transparent 60%),
+        linear-gradient(135deg, rgba(124,92,255,.95), rgba(41,211,255,.85));
+      box-shadow: 0 12px 30px rgba(124,92,255,.22);
       border: 1px solid rgba(255,255,255,.14);
-      font-size: 9.5pt;
-      letter-spacing: .4px;
+      display:grid; place-items:center;
+    }
+    .brand .logo i{color: rgba(255,255,255,.9); font-size: 16px}
+    .brand .t{
+      display:flex; flex-direction:column; line-height:1.1;
+    }
+    .brand .t b{font-size: 14px; letter-spacing:.2px}
+    .brand .t span{font-size: 12px; color: var(--muted)}
+    .nav{
+      display:flex; gap: 8px; align-items:center; flex-wrap:wrap; justify-content:flex-end;
+    }
+    .chip{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      color: rgba(255,255,255,.78);
+      font-size: 12px;
+      display:flex; gap: 8px; align-items:center;
+      transition: .18s ease;
+      user-select:none;
+    }
+    .chip:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.06)}
+    .chip i{opacity:.9}
+    .chip.active{
+      background: linear-gradient(135deg, rgba(124,92,255,.26), rgba(41,211,255,.18));
+      border-color: rgba(124,92,255,.38);
+      color: rgba(255,255,255,.90);
+    }
+
+    .hero{
+      position:relative;
+      padding: 54px 0 24px;
+    }
+    .heroGrid{
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 20px;
+      align-items:stretch;
+    }
+    .headline{
+      border-radius: var(--radius2);
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      padding: 26px;
+      position:relative;
+      overflow:hidden;
+    }
+    .headline:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(800px 320px at 10% 0%, rgba(124,92,255,.22), transparent 55%),
+                  radial-gradient(600px 260px at 110% 10%, rgba(41,211,255,.18), transparent 55%);
+      opacity:.9;
+      pointer-events:none;
+    }
+    .headline > *{position:relative}
+    .kicker{
+      display:flex; gap:10px; align-items:center;
+      color: rgba(255,255,255,.82);
+      font-size: 12px;
+      letter-spacing:.3px;
       text-transform: uppercase;
     }
-    .header.light .kicker{
-      background: rgba(29,134,214,.08);
-      border: 1px solid rgba(29,134,214,.16);
-      color: var(--text);
-    }
-
-    /* ====== Cards ====== */
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10mm;
-      margin-top: 8mm;
-    }
-    .grid.two { grid-template-columns: 1fr 1fr; }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 8mm;
-      box-shadow: var(--shadow);
-    }
-    .card.dark {
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      color: #fff;
-      box-shadow: none;
-    }
-    .card-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 6mm;
-    }
-    .pill {
-      display: inline-block;
-      padding: 5px 10px;
+    .kicker .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 7px 10px;
       border-radius: 999px;
-      font-size: 9.5pt;
-      border: 1px solid var(--line);
-      background: rgba(29,134,214,.06);
-      color: var(--text);
-      white-space: nowrap;
+      background: rgba(124,92,255,.16);
+      border: 1px solid rgba(124,92,255,.30);
     }
-    .card.dark .pill{
-      border-color: rgba(255,255,255,.18);
-      background: rgba(255,255,255,.10);
-      color: rgba(255,255,255,.92);
+    .kicker .pill i{color: rgba(255,255,255,.92)}
+    h1{
+      margin: 12px 0 10px;
+      font-size: clamp(26px, 3.4vw, 40px);
+      letter-spacing: -.4px;
+      line-height: 1.08;
     }
-
-    /* ====== Listas ====== */
-    ul { margin: 0; padding-left: 18px; }
-    li { margin: 0 0 7px; font-size: 11pt; line-height: 1.45; }
-
-    /* ====== Seções especiais ====== */
-    .quote {
-      border-left: 4px solid var(--accent);
-      padding: 8mm;
-      border-radius: 14px;
-      background: rgba(29,134,214,.06);
-    }
-    .quote.dark {
-      border-left-color: var(--accent-2);
-      background: rgba(255,255,255,.08);
-    }
-    .big-line {
-      font-size: 14pt;
-      font-weight: 800;
-      line-height: 1.25;
-      margin: 0;
-    }
-
-    /* ====== Footer ====== */
-    .footer {
-      position: absolute;
-      left: 14mm;
-      right: 14mm;
-      bottom: 10mm;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 9pt;
-      color: rgba(255,255,255,.72);
-    }
-    .page:not(.page--dark):not(.page--cover) .footer {
+    .sub{
+      margin:0;
       color: var(--muted);
+      font-size: 14.5px;
+      line-height: 1.55;
+      max-width: 70ch;
     }
-
-    .page-number {
-      border: 1px solid rgba(255,255,255,.16);
-      padding: 3px 10px;
+    .heroActions{
+      margin-top: 16px;
+      display:flex; flex-wrap:wrap; gap: 10px;
+    }
+    .btn{
+      border: 1px solid var(--stroke);
       border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,.86);
+      background: rgba(255,255,255,.04);
+      display:inline-flex; align-items:center; gap: 10px;
+      transition: .18s ease;
+      user-select:none;
     }
-    .page:not(.page--dark):not(.page--cover) .page-number{
-      border-color: var(--line);
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.22)}
+    .btn.primary{
+      border-color: rgba(124,92,255,.44);
+      background: linear-gradient(135deg, rgba(124,92,255,.30), rgba(41,211,255,.18));
+    }
+    .btn.primary:hover{border-color: rgba(124,92,255,.65)}
+    .btn i{opacity:.95}
+    .sidecard{
+      border-radius: var(--radius2);
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      overflow:hidden;
+      position:relative;
+    }
+    .sidecard:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(700px 300px at 20% 0%, rgba(46,229,157,.14), transparent 55%),
+                  radial-gradient(600px 260px at 90% 30%, rgba(255,204,102,.10), transparent 58%);
+      pointer-events:none;
+      opacity:1;
+    }
+    .sidecard > *{position:relative}
+    .meta{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .metaitem{
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+    }
+    .metaitem b{display:block; font-size: 12px; color: rgba(255,255,255,.85); margin-bottom: 6px}
+    .metaitem span{display:block; font-size: 12px; color: var(--muted); line-height:1.35}
+
+    .badges{
+      display:flex; flex-wrap:wrap; gap: 8px; margin-top: 14px;
+    }
+    .badge{
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      color: rgba(255,255,255,.78);
+      display:inline-flex; gap: 8px; align-items:center;
+    }
+    .badge i{opacity:.95}
+    .badge.good{border-color: rgba(46,229,157,.35); background: rgba(46,229,157,.08)}
+    .badge.warn{border-color: rgba(255,204,102,.35); background: rgba(255,204,102,.08)}
+    .badge.acc{border-color: rgba(124,92,255,.35); background: rgba(124,92,255,.08)}
+
+    .section{
+      padding: 28px 0 18px;
+    }
+    .sectionHeader{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .sectionHeader h2{
+      margin:0;
+      font-size: 18px;
+      letter-spacing:.1px;
+    }
+    .sectionHeader p{
+      margin:0;
+      color: var(--muted);
+      font-size: 12.5px;
+      max-width: 76ch;
+      line-height:1.45;
     }
 
-    /* ====== Print ====== */
-    @page { size: A4; margin: 0; }
-    @media print {
-      .page { page-break-after: always; }
-      a { color: inherit; text-decoration: none; }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      padding: 16px;
+      box-shadow: 0 18px 44px rgba(0,0,0,.30);
+      position:relative;
+      overflow:hidden;
+    }
+    .card:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(600px 220px at 18% 0%, rgba(124,92,255,.12), transparent 55%),
+                  radial-gradient(520px 220px at 110% 20%, rgba(41,211,255,.10), transparent 55%);
+      opacity:.7;
+      pointer-events:none;
+    }
+    .card > *{position:relative}
+    .card h3{margin:0 0 10px; font-size: 14px; color: rgba(255,255,255,.88); display:flex; align-items:center; gap: 10px}
+    .card h3 i{color: rgba(255,255,255,.92)}
+    .card p{margin:0; color: var(--muted); font-size: 13px; line-height: 1.55}
+    .list{
+      margin: 10px 0 0;
+      padding: 0 0 0 18px;
+      color: rgba(255,255,255,.74);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .list li{margin: 6px 0}
+    .hint{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px dashed rgba(255,255,255,.22);
+      color: rgba(255,255,255,.70);
+      background: rgba(255,255,255,.03);
+      font-size: 12.5px;
+      line-height: 1.45;
     }
 
-    /* Responsivo (caso visualize no browser) */
-    @media screen and (max-width: 900px){
-      .page { width: auto; min-height: auto; padding: 18px; }
-      .grid.two { grid-template-columns: 1fr; }
-      .footer { position: static; margin-top: 14px; }
+    .span-4{grid-column: span 4}
+    .span-5{grid-column: span 5}
+    .span-6{grid-column: span 6}
+    .span-7{grid-column: span 7}
+    .span-8{grid-column: span 8}
+    .span-12{grid-column: span 12}
+
+    /* Flow / state machine */
+    .stateWrap{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .states{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .state{
+      border-radius: 16px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      padding: 12px;
+      min-height: 86px;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+      position:relative;
+      overflow:hidden;
+    }
+    .state:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(420px 140px at 10% 0%, rgba(255,255,255,.06), transparent 58%);
+      pointer-events:none;
+      opacity:.9;
+    }
+    .state > *{position:relative}
+    .state .top{
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+    }
+    .state .name{
+      font-weight: 700;
+      font-size: 12.5px;
+      color: rgba(255,255,255,.88);
+      letter-spacing: .1px;
+    }
+    .tag{
+      font-size: 11px;
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      color: rgba(255,255,255,.72);
+      white-space:nowrap;
+    }
+    .tag.acc{border-color: rgba(124,92,255,.35); background: rgba(124,92,255,.08)}
+    .tag.good{border-color: rgba(46,229,157,.35); background: rgba(46,229,157,.08)}
+    .tag.warn{border-color: rgba(255,204,102,.35); background: rgba(255,204,102,.08)}
+    .tag.bad{border-color: rgba(255,92,122,.35); background: rgba(255,92,122,.08)}
+    .state .desc{
+      font-size: 12px; color: var(--muted); line-height: 1.45;
+    }
+
+    .transitions{
+      border-radius: 18px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      padding: 14px;
+    }
+    .transitions h4{
+      margin:0 0 10px; font-size: 13px; color: rgba(255,255,255,.86);
+      display:flex; align-items:center; gap: 10px;
+    }
+    .kv{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .kvi{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.02);
+      padding: 10px 12px;
+    }
+    .kvi b{display:block; font-size: 12px; color: rgba(255,255,255,.86); margin-bottom: 6px}
+    .kvi span{display:block; font-size: 12px; color: var(--muted); line-height:1.4}
+    .mono{font-family:var(--mono)}
+
+    /* Accordion */
+    details{
+      border-radius: 18px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      padding: 12px 14px;
+    }
+    details + details{margin-top: 10px}
+    summary{
+      list-style:none;
+      cursor:pointer;
+      display:flex; align-items:center; justify-content:space-between; gap: 10px;
+      user-select:none;
+    }
+    summary::-webkit-details-marker{display:none}
+    .sumLeft{
+      display:flex; align-items:center; gap: 10px;
+      font-weight: 700;
+      color: rgba(255,255,255,.86);
+      font-size: 13px;
+    }
+    .sumLeft i{opacity:.95}
+    .sumRight{
+      color: rgba(255,255,255,.66);
+      font-size: 12px;
+      display:flex; align-items:center; gap: 10px;
+    }
+    details[open] .sumRight .chev{transform: rotate(180deg)}
+    .chev{transition: transform .18s ease}
+    .content{
+      margin-top: 10px;
+      color: rgba(255,255,255,.76);
+      font-size: 13px;
+      line-height: 1.6;
+      padding-left: 2px;
+    }
+    .content ul{margin: 8px 0 0; padding-left: 18px}
+    .content li{margin: 6px 0}
+
+    /* Tables */
+    .tableWrap{
+      border-radius: 18px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      overflow:hidden;
+    }
+    table{
+      width:100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+    thead th{
+      text-align:left;
+      padding: 12px 12px;
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.84);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    tbody td{
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      color: rgba(255,255,255,.75);
+      vertical-align:top;
+    }
+    tbody tr:hover td{
+      background: rgba(255,255,255,.02);
+    }
+    .role{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.02);
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+      white-space:nowrap;
+    }
+    .role.rec{border-color: rgba(41,211,255,.35); background: rgba(41,211,255,.08)}
+    .role.med{border-color: rgba(46,229,157,.35); background: rgba(46,229,157,.08)}
+    .role.adm{border-color: rgba(124,92,255,.35); background: rgba(124,92,255,.08)}
+    .permit{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.02);
+      white-space:nowrap;
+    }
+    .yes{border-color: rgba(46,229,157,.40); background: rgba(46,229,157,.08); color: rgba(255,255,255,.84)}
+    .no{border-color: rgba(255,92,122,.35); background: rgba(255,92,122,.08); color: rgba(255,255,255,.82)}
+    .notes{
+      color: rgba(255,255,255,.62);
+      font-size: 12px;
+      line-height:1.45;
+    }
+
+    /* Footer */
+    .footer{
+      padding: 28px 0 34px;
+      color: rgba(255,255,255,.62);
+      font-size: 12px;
+    }
+    .footer .line{
+      border-top: 1px solid rgba(255,255,255,.10);
+      padding-top: 14px;
+      display:flex; justify-content:space-between; gap: 12px; flex-wrap:wrap;
+    }
+    .kbd{
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 3px 7px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.04);
+      color: rgba(255,255,255,.75);
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .heroGrid{grid-template-columns: 1fr}
+      .brand{min-width:auto}
+      .states{grid-template-columns: repeat(2, 1fr)}
+      .kv{grid-template-columns: 1fr}
+      .span-4,.span-5,.span-6,.span-7,.span-8,.span-12{grid-column: span 12}
+      .nav{justify-content:flex-start}
+      .meta{grid-template-columns: 1fr}
+    }
+    @media (max-width: 560px){
+      .states{grid-template-columns: 1fr}
+      .chip{padding: 8px 9px}
+      table{font-size: 12px}
+      thead{display:none}
+      tbody tr{display:block; border-bottom: 1px solid rgba(255,255,255,.10)}
+      tbody td{display:block; padding: 8px 12px; border-bottom:none}
+      tbody td:before{
+        content: attr(data-label);
+        display:block;
+        font-size: 11px;
+        color: rgba(255,255,255,.58);
+        margin-bottom: 4px;
+        letter-spacing:.2px;
+        text-transform: uppercase;
+      }
+    }
+
+    /* Print */
+    @media print{
+      .topbar, .heroActions, .btn, .chip {display:none !important}
+      body{background:#fff; color:#111}
+      .card, .headline, .sidecard, details, .tableWrap, .transitions{box-shadow:none !important; background:#fff !important; border-color:#ddd !important}
+      .sub, .card p, .content, .notes{color:#333 !important}
     }
   </style>
 </head>
 
 <body>
-
-  <!-- ====== SLIDE 1: CAPA ====== -->
-  <section class="page page--cover">
-    <header class="header">
-      <div class="brand">
-        <div class="brand-badge" aria-hidden="true"></div>
-        <div style="min-width:0">
-          <div class="kicker">ARGUS GATE FRAMEWORK</div>
-          <h2 class="brand-title" style="margin-top:8px;">G5 — Implantação</h2>
-          <p class="brand-subtitle">Execução disciplinada, governança ativa e proteção do valor</p>
-        </div>
-      </div>
-      <div class="meta">
-        <div><strong>Documento:</strong> Apresentação exportável</div>
-        <div><strong>Versão:</strong> v1.0</div>
-        <div><strong>Data:</strong> ___/___/_____</div>
-      </div>
-    </header>
-
-    <div class="content">
-      <h1 style="margin-top:14mm;">Executar com controle é obrigatório.</h1>
-      <p style="font-size:12pt; max-width: 155mm; opacity:.92;">
-        O Gate 5 materializa o valor aprovado nos Gates anteriores por meio de uma execução
-        controlada, previsível e auditável — sem surpresa no encerramento.
-      </p>
-
-      <div class="grid two" style="margin-top:14mm;">
-        <div class="card dark">
-          <div class="card-title">
-            <h3>Foco do G5</h3>
-            <span class="pill">Value Delivery</span>
-          </div>
-          <ul>
-            <li>Executar o plano aprovado conforme acordado</li>
-            <li>Tratar riscos antes de virarem impacto</li>
-            <li>Qualidade como critério de avanço</li>
-            <li>Governança ativa e transparente</li>
-          </ul>
-        </div>
-
-        <div class="card dark">
-          <div class="card-title">
-            <h3>Mensagem AGF</h3>
-            <span class="pill">Disciplina</span>
-          </div>
-          <div class="quote dark">
-            <p class="big-line">No AGF, executar é importante.</p>
-            <p class="big-line" style="margin-top:6px;">Executar com controle é obrigatório.</p>
+  <header class="topbar" id="top">
+    <div class="wrap">
+      <div class="row">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"><i class="fa-solid fa-stethoscope"></i></div>
+          <div class="t">
+            <b>MVP — Fluxo de Atendimento</b>
+            <span>Senhas • Painéis • Registro • Encaminhamento • Atendimento</span>
           </div>
         </div>
+
+        <nav class="nav" aria-label="Menu">
+          <a class="chip" href="#mvp"><i class="fa-solid fa-bullseye"></i> MVP</a>
+          <a class="chip" href="#design"><i class="fa-solid fa-compass-drafting"></i> Princípios</a>
+          <a class="chip" href="#filas"><i class="fa-solid fa-layer-group"></i> Filas</a>
+          <a class="chip" href="#estados"><i class="fa-solid fa-diagram-project"></i> Estados</a>
+          <a class="chip" href="#perfis"><i class="fa-solid fa-user-shield"></i> Perfis</a>
+          <a class="chip" href="#prioridade"><i class="fa-solid fa-scale-balanced"></i> Prioridade</a>
+          <a class="chip" href="#dados"><i class="fa-solid fa-id-card"></i> Campos</a>
+          <a class="chip" href="#carreta"><i class="fa-solid fa-truck-medical"></i> Carreta</a>
+          <a class="chip" href="#algoritmo"><i class="fa-solid fa-wand-magic-sparkles"></i> Algoritmo</a>
+          <a class="chip" href="#permissoes"><i class="fa-solid fa-table"></i> Permissões</a>
+          <a class="chip" href="#parametros"><i class="fa-solid fa-sliders"></i> Parâmetros</a>
+        </nav>
       </div>
     </div>
+  </header>
 
-    <footer class="footer">
-      <div>ARGUS Watch • Baumgratz Code</div>
-      <div class="page-number">1</div>
-    </footer>
-  </section>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="heroGrid">
+          <div class="headline">
+            <div class="kicker">
+              <span class="pill"><i class="fa-solid fa-bolt"></i> MVP pronto para operação</span>
+              <span style="color: rgba(255,255,255,.68)">Governança • Simplicidade • Auditabilidade</span>
+            </div>
 
-  <!-- ====== SLIDE 2: OBJETIVO DO G5 ====== -->
-  <section class="page">
-    <header class="header light">
-      <div class="brand">
-        <div class="brand-badge" aria-hidden="true"></div>
-        <div style="min-width:0">
-          <div class="kicker">G5 — Objetivo</div>
-          <h2 class="brand-title">Materializar valor com previsibilidade</h2>
-          <p class="brand-subtitle">Execução controlada, rastreável e auditável</p>
+            <h1>Consolidação do Fluxo de Atendimento</h1>
+            <p class="sub">
+              Documento de apresentação do MVP com visão ponta-a-ponta: emissão de senhas, painéis de chamadas,
+              registro administrativo, fila médica por especialidade (ou médico indicado), atendimento, observação,
+              finalização e reversões operacionais. Estruturado para alinhamento com stakeholders e execução com previsibilidade.
+            </p>
+
+            <div class="heroActions">
+              <a class="btn primary" href="#mvp"><i class="fa-solid fa-play"></i> Iniciar pelo MVP</a>
+              <a class="btn" href="#estados"><i class="fa-solid fa-diagram-project"></i> Ver máquina de estados</a>
+              <a class="btn" href="#carreta"><i class="fa-solid fa-truck-medical"></i> Ver Carreta da Saúde</a>
+              <a class="btn" href="#permissoes"><i class="fa-solid fa-table"></i> Ver permissões</a>
+            </div>
+          </div>
+
+          <aside class="sidecard">
+            <div>
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                <div>
+                  <div style="font-weight:800; letter-spacing:.2px;">Resumo executivo</div>
+                  <div style="color:var(--muted); font-size:12.5px; margin-top:4px; line-height:1.45">
+                    Foco em velocidade operacional, máquina de estados explícita, flexibilidade para exceções e conformidade legal de prioridade.
+                  </div>
+                </div>
+                <div class="tag acc"><i class="fa-solid fa-shield-heart" style="margin-right:6px"></i>Saúde</div>
+              </div>
+
+              <div class="meta">
+                <div class="metaitem">
+                  <b><i class="fa-solid fa-gauge-high" style="margin-right:8px"></i>Princípio</b>
+                  <span>Simplicidade, poucos cliques, baixa latência e operação fluida.</span>
+                </div>
+                <div class="metaitem">
+                  <b><i class="fa-solid fa-clipboard-check" style="margin-right:8px"></i>Controle</b>
+                  <span>Transições claras, logs/auditoria e prevenção de dupla chamada.</span>
+                </div>
+              </div>
+
+              <div class="badges">
+                <span class="badge good"><i class="fa-solid fa-check"></i> Reversões nativas</span>
+                <span class="badge acc"><i class="fa-solid fa-route"></i> Fila por especialidade</span>
+                <span class="badge warn"><i class="fa-solid fa-scale-balanced"></i> Prioridade legal</span>
+              </div>
+            </div>
+
+            <div class="hint">
+              Dica de apresentação: navegue pelo menu superior. O cabeçalho permanece visível e as seções são independentes, facilitando o storytelling.
+            </div>
+          </aside>
         </div>
       </div>
-      <div class="meta">
-        <div><strong>Gate:</strong> 5</div>
-        <div><strong>Framework:</strong> AGF</div>
-      </div>
-    </header>
+    </section>
 
-    <div class="content">
-      <div class="card">
-        <h3>Objetivo do Gate 5</h3>
-        <p>
-          O G5 — Implantação tem como objetivo materializar o valor aprovado nos Gates anteriores, por meio de uma
-          execução controlada, previsível e auditável, garantindo que:
-        </p>
-        <ul>
-          <li>O plano aprovado seja executado conforme acordado</li>
-          <li>Riscos sejam tratados antes de virar impacto</li>
-          <li>Qualidade seja critério de avanço</li>
-          <li>Não exista surpresa no encerramento</li>
-        </ul>
-      </div>
-
-      <div class="quote" style="margin-top:10mm;">
-        <p class="big-line">Executar é importante. Executar com controle é obrigatório.</p>
-      </div>
-    </div>
-
-    <footer class="footer">
-      <div>Execução disciplinada • Governança ativa • Proteção do valor</div>
-      <div class="page-number">2</div>
-    </footer>
-  </section>
-
-  <!-- ====== SLIDE 3: PRINCÍPIOS ====== -->
-  <section class="page">
-    <header class="header light">
-      <div class="brand">
-        <div class="brand-badge" aria-hidden="true"></div>
-        <div style="min-width:0">
-          <div class="kicker">Princípios do G5</div>
-          <h2 class="brand-title">Como o AGF governa a execução</h2>
-          <p class="brand-subtitle">Decisão por evidência e avanço qualificado</p>
-        </div>
-      </div>
-      <div class="meta">
-        <div><strong>Dimensão:</strong> Governança</div>
-        <div><strong>Critério:</strong> Evidência</div>
-      </div>
-    </header>
-
-    <div class="content">
-      <div class="grid two">
-        <div class="card">
-          <h3>Princípios</h3>
-          <ul>
-            <li>Execução orientada a valor, não a volume de atividades</li>
-            <li>Governança ativa, sem burocracia excessiva</li>
-            <li>Decisão baseada em evidência, não percepção</li>
-            <li>Avanço consciente: só evolui com qualificação</li>
-            <li>Transparência total para stakeholders</li>
-          </ul>
+    <!-- 1. MVP -->
+    <section class="section" id="mvp">
+      <div class="wrap">
+        <div class="sectionHeader">
+          <div>
+            <h2>1) Objetivo e Escopo do MVP</h2>
+            <p>Baseline do produto para operação inicial: velocidade, clareza operacional e capacidade de desfazer ações (fluxo real de clínica).</p>
+          </div>
         </div>
 
-        <div class="card">
-          <h3>Intenção de controle</h3>
-          <p class="muted">
-            O G5 trata execução como um fluxo de entrega com checkpoints formais,
-            garantindo alinhamento, rastreabilidade e previsibilidade operacional.
-          </p>
-          <div class="quote" style="margin-top:6mm;">
-            <p class="big-line">Controle contínuo reduz ruído, retrabalho e risco oculto.</p>
+        <div class="grid">
+          <div class="card span-7">
+            <h3><i class="fa-solid fa-bullseye"></i> Objetivo</h3>
+            <p>
+              Estabelecer um sistema ágil e de fácil uso para a gestão do fluxo de pacientes, da emissão de senha ao encaminhamento ao médico e finalização do atendimento,
+              reduzindo burocracia e cliques, com flexibilidade para reverter estados quando necessário.
+            </p>
+            <div class="hint">
+              Diretriz de produto: rapidez na recepção e no consultório + capacidade de desfazer/retornar ações para aderência à operação real.
+            </div>
+          </div>
+
+          <div class="card span-5">
+            <h3><i class="fa-solid fa-sitemap"></i> Escopo contemplado</h3>
+            <ul class="list">
+              <li>Emissão de senhas para filas diversas</li>
+              <li>Chamada e registro administrativo (recepção)</li>
+              <li>Fila médica segmentada por especialidade (ou médico indicado)</li>
+              <li>Atendimento médico com observação e finalização com hora de saída</li>
+              <li>Reversões: remover senha, retornar à fila, priorizar, reabrir atendimento</li>
+            </ul>
+          </div>
+
+          <div class="card span-12">
+            <h3><i class="fa-solid fa-lock"></i> Regra estrutural de fila médica</h3>
+            <p>
+              A fila de atendimento médico deve obedecer estritamente ao critério de <b>especialidade</b>, não sendo uma fila única genérica.
+              Alternativamente, pode operar por <b>médico indicado</b> (configurável), conforme o modelo de atribuição adotado.
+            </p>
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <footer class="footer">
-      <div>Governança sem excesso • Transparência • Evidência</div>
-      <div class="page-number">3</div>
-    </footer>
-  </section>
+    <!-- 2. Princípios -->
+    <section class="section" id="design">
+      <div class="wrap">
+        <div class="sectionHeader">
+          <div>
+            <h2>2) Princípios de Desenho</h2>
+            <p>Princípios não negociáveis para garantir eficiência operacional, previsibilidade e governança do fluxo.</p>
+          </div>
+        </div>
 
-  <!-- ====== SLIDE 4: ESTRUTURA DO G5 ====== -->
-  <section class="page page--dark">
-    <header class="header">
-      <div class="brand">
-        <div class="brand-badge" aria-hidden="true"></div>
-        <div style="min-width:0">
-          <div class="kicker">Estrutura</div>
-          <h2 class="brand-title">Fases do G5 (Execução incremental + decisão formal)</h2>
-          <p class="brand-subtitle">Fases clássicas com checkpoints no ponto correto</p>
+        <div class="grid">
+          <div class="card span-4">
+            <h3><i class="fa-solid fa-bolt"></i> Simplicidade e velocidade</h3>
+            <p>Interface intuitiva e com poucos cliques para ações recorrentes, minimizando tempo de espera e fricção operacional.</p>
+          </div>
+
+          <div class="card span-4">
+            <h3><i class="fa-solid fa-diagram-project"></i> Máquina de estados explícita</h3>
+            <p>Fluxo gerenciado por estados bem definidos e transições controladas, evitando “zonas cinzentas” na operação.</p>
+          </div>
+
+          <div class="card span-4">
+            <h3><i class="fa-solid fa-rotate-left"></i> Flexibilidade operacional</h3>
+            <p>Desfazer/retornar/reverter é funcionalidade nativa e essencial, refletindo a imprevisibilidade do atendimento em saúde.</p>
+          </div>
+
+          <div class="card span-12">
+            <h3><i class="fa-solid fa-stethoscope"></i> Fila médica por especialidade</h3>
+            <p>Encaminhamento e chamada obedecem especialidade, garantindo aderência operacional (plantão) e evitando sobrecarga de fila genérica.</p>
+          </div>
         </div>
       </div>
-      <div class="meta">
-        <div><strong>Modelo:</strong> Híbrido</div>
-        <div><strong>Cadência:</strong> Incremental</div>
-      </div>
-    </header>
+    </section>
 
-    <div class="content">
-      <div<|endoftext|>
+    <!-- 3. Estrutura de Filas -->
+    <section class="section" id="filas">
+      <div class="wrap">
+        <div class="sectionHeader">
+          <div>
+            <h2>3) Estrutura de Filas</h2>
+            <p>Separação entre entrada (recepção) e encaminhamento (fila médica), com modelo de atribuição configurável.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card span-6">
+            <h3><i class="fa-solid fa-ticket"></i> 3.1 Filas de senha na recepção</h3>
+            <ul class="list">
+              <li><b>Divisões</b>: por especialidade (recomendado), tipo de senha ou guichê</li>
+              <li><b>Operação</b>: chamar próximo (ordem/prioridade) ou chamar senha específica</li>
+              <li><b>Uso prático</b>: suporta múltiplos atendentes operando nas mesmas filas</li>
+            </ul>
+          </div>
+
+          <div class="card span-6">
+            <h3><i class="fa-solid fa-user-doctor"></i> 3.2 Fila para atendimento médico</h3>
+            <ul class="list">
+              <li><b>Critério de especialidade</b>: paciente de Cardiologia só é visível/chamável por médicos da Cardiologia</li>
+              <li><b>Segmentação</b>: fila “Encaminhado ao Médico” é sempre filtrada por especialidade (baseline)</li>
+            </ul>
+            <div class="hint">
+              Atribuição pode ser por plantão (qualquer médico da especialidade) ou por médico responsável, conforme parâmetro.
+            </div>
+          </div>
+
+          <div class="card span-12">
+            <h3><i class="fa-solid fa-sliders"></i> Modelos de atribuição médica</h3>
+            <div class="grid">
+              <div class="card span-6" style="box-shadow:none; background:rgba(255,255,255,.02)">
+                <h3><i class="fa-solid fa-layer-group"></i> Modelo A — Especialidade + médico opcional</h3>
+                <p>Clínicas com plantão: paciente pode ser atendido por qualquer médico disponível da especialidade. Seleção de médico não é obrigatória.</p>
+              </div>
+              <div class="card span-6" style="box-shadow:none; background:rgba(255,255,255,.02)">
+                <h3><i class="fa-solid fa-user-check"></i> Modelo B — Médico responsável obrigatório</h3>
+                <p>Clínicas com encaminhamento nominal: sistema exige seleção do médico no registro/encaminhamento.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Máquina de Estados -->
+    <section class="section" id="estados">
+      <div class="wrap">
+        <div class="sectionHeader">
+          <div>
+            <h2>4) Máquina de Estados</h2>
+            <p>Estados mínimos do MVP, estados futuros previstos e transições-chave por perfil. Base para governança e auditoria.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card span-8">
+            <h3><i class="fa-solid fa-diagram-project"></i> 4.1 Estados mínimos (MVP)</h3>
+
+            <div class="stateWrap">
+              <div class="states">
+                <div class="state">
+                  <div class="top">
+                    <div class="name">Aguardando (Recepção)</div>
+                    <div class="tag acc">Entrada</div>
+                  </div>
+                  <div class="desc">Senha emitida e aguardando chamada pela recepção.</div>
+                </div>
+
+                <div class="state">
+                  <div class="top">
+                    <div class="name">Chamado (Recepção)</div>
+                    <div class="tag warn">Chamada</div>
+                  </div>
+                  <div class="desc">Senha chamada; aguardando apresentação para registro.</div>
+                </div>
+
+                <div class="state">
+                  <div class="top">
+                    <div class="name">Em Registro (Recepção)</div>
+                    <div class="tag acc">Transição</div>
+                  </div>
+                  <div class="desc">Registro administrativo (estado rápido de transição).</div>
+                </div>
+
+                <div class="state">
+                  <div class="top">
+                    <div class="name">Encaminhado ao Médico</div>
+                    <div class="tag acc">Fila médica</div>
+                  </div>
+                  <div class="desc">Aguardando chamada do médico na fila da especialidade.</div>
+                </div>
+
+                <div class="state">
+                  <div class="top">
+                    <div class="name">Em Atendimento (Médico)</div>
+                    <div class="tag good">Em execução</div>
+                  </div>
+                  <div class="desc">Paciente em atendimento médico.</div>
+                </div>
+
+                <div class="state">
+                  <div class="top">
+                    <div class="name">Em Observação</div>
+                    <div class="tag warn">Monitoramento</div>
+                  </div>
+                  <div class="desc">Paciente colocado em observação pelo médico.</div>
+                </div>
+
+                <div class="state">
+                  <div class="top">
+                    <div class="name">Finalizado</div>
+                    <div class="tag good">Saída</div>
+                  </div>
+                  <div class="desc">Atendimento concluído com hora de saída registrada.</div>
+                </div>
+
+                <div class="state">
+                  <div class="top">
+                    <div class="name">Não Compareceu</div>
+                    <div class="tag bad">Exceção</div>
+                  </div>
+                  <div class="desc">Paciente não se apresentou após chamado pelo médico.</div>
+                </div>
+
+                <div class="state">
+                  <div class="top">
+                    <div class="name">Cancelado/Removido</div>
+                    <div class="tag bad">Exceção</div>
+                  </div>
+                  <div class="desc">Senha removida do fluxo sem iniciar atendimento.</div>
+                </div>
+              </div>
+
+              <div class="transitions">
+                <h4><i class="fa-solid fa-arrow-right-arrow-left"></i> Transições-chave (baseline)</h4>
+                <div class="kv">
+                  <div class="kvi">
+                    <b>Recepção</b>
+                    <span class="mono">Aguardando → Chamado → Em Registro → Encaminhado</span>
+                    <span style="display:block; margin-top:6px">+ Retornos, cancelamentos e finalização/reabertura conforme permissões.</span>
+                  </div>
+                  <div class="kvi">
+                    <b>Médico</b>
+                    <span class="mono">Encaminhado → Em Atendimento → (Em Observação) → Finalizado</span>
+                    <span style="display:block; margin-top:6px">+ Reabertura do atendimento finalizado quando necessário.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card span-4">
+            <h3><i class="fa-solid fa-road"></i> 4.2 Estados futuros (evolução)</h3>
+            <ul class="list">
+              <li>Aguardando Triagem</li>
+              <li>Em Triagem</li>
+              <li>Atendimento interrompido (para remarcação/agenda e cirúrgicos)</li>
+            </ul>
+            <div class="hint">
+              Itens futuros ficam no backlog (parking lot) para evitar ruptura de escopo do MVP.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Transições por perfil -->
+    <section class="section" id="perfis">
+      <div class="wrap">
+        <div class="sectionHeader">
+          <div>
+            <h2>5) Transições Permitidas por Perfil</h2>
+            <p>Distribuição de capabilities por perfil, com destaque para reversões e reabertura.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card span-4">
+            <h3><i class="fa-solid fa-headset"></i> 5.1 Recepção</h3>
+            <ul class="list">
+              <li>Chamar próximo / senha específica</li>
+              <li>Registrar atendimento e encaminhar ao médico</li>
+              <li>Remover/cancelar senha e retornar à fila</li>
+              <li>Tornar prioritária / remover prioridade</li>
+              <li>Finalizar atendimento (quando médico esquece)</li>
+              <li>Reabrir atendimento finalizado</li>
+            </ul>
+          </div>
+
+          <div class="card span-4">
+            <h3><i class="fa-solid fa-user-doctor"></i> 5.2 Médico</h3>
+            <ul class="list">
+              <li>Chamar paciente (fila da especialidade)</li>
+              <li>Colocar em observação (reflete no status)</li>
+              <li>Finalizar atendimento com hora de saída</li>
+              <li>Reabrir atendimento finalizado</li>
+            </ul>
+          </div>
+
+          <div class="card span-4">
+            <h3><i class="fa-solid fa-user-gear"></i> 5.3 Administrador</h3>
+            <ul class="list">
+              <li>Configurar especialidades e divisões de fila</li>
+              <li>Definir modelo de atribuição (A/B)</li>
+              <li>Regras do painel (som, destaque, histórico)</li>
+              <li>Regras de prioridade e permissões por perfil</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <details>
+            <summary>
+              <div class="sumLeft"><i class="fa-solid fa-rotate-left"></i> Reversibilidade (funcionalidade nativa)</div>
+              <div class="sumRight">Ver detalhes <i class="fa-solid fa-chevron-down chev"></i></div>
+            </summary>
+            <div class="content">
+              A capacidade de desfazer e retornar estados é parte do desenho do MVP. Casos típicos:
+              <ul>
+                <li>Retornar senha chamada para a fila (Chamado → Aguardando)</li>
+                <li>Remover/cancelar senha antes do registro (Aguardando/Chamado → Cancelado/Removido)</li>
+                <li>Reabrir atendimento finalizado (Finalizado → Encaminhado ao Médico)</li>
+                <li>Finalizar pelo recepcionista quando o médico esquece (Encaminhado → Finalizado)</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Prioridade e Base Legal -->
+    <section class="section" id="prioridade">
+      <div class="wrap">
+        <div class="sectionHeader">
+          <div>
+            <h2>6) Prioridade / Senha Preferencial (Brasil)</h2>
+            <p>Requisito legal e operacional. Sistema deve suportar marcação, evidência visual, ordenação e auditoria.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card span-7">
+            <h3><i class="fa-solid fa-scale-balanced"></i> 6.1 Referências legais (alto nível)</h3>
+            <ul class="list">
+              <li>Lei nº 10.048/2000 — prioridade de atendimento (PCD, idosos 60+, gestantes, lactantes, crianças de colo, obesos)</li>
+              <li>Decreto nº 5.296/2004 — regulamentação e detalhamento</li>
+              <li>Lei nº 13.146/2015 — Estatuto da Pessoa com Deficiência</li>
+            </ul>
+            <div class="hint">
+              O objetivo do MVP é viabilizar conformidade com evidência, ordenação e trilha de auditoria.
+            </div>
+          </div>
+
+          <div class="card span-5">
+            <h3><i class="fa-solid fa-check-double"></i> 6.2 Requisitos do sistema</h3>
+            <ul class="list">
+              <li>Marcação de prioridade (manual ou automática por idade)</li>
+              <li>Evidência visual: ícones/tags no painel público e nos painéis operacionais</li>
+              <li>Ordenação: prioritário antes do não prioritário, com FIFO interno</li>
+              <li>Configurável: alternância (ex.: 1 prioritário a cada 3 não prioritários), sem ferir legislação</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Campos mínimos -->
+    <section class="section" id="dados">
+      <div class="wrap">
+        <div class="sectionHeader">
+          <div>
+            <h2>7) Campos Mínimos por Etapa</h2>
+            <p>Dados mínimos para operar com velocidade e evoluir para prontuário/agenda sem retrabalho.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card span-4">
+            <h3><i class="fa-solid fa-ticket"></i> 7.1 Emissão de senha</h3>
+            <ul class="list">
+              <li>Divisão/Especialidade (obrigatório)</li>
+              <li>Número da senha (auto ou digitado)</li>
+              <li>Prioritário (Sim/Não)</li>
+              <li>Observação rápida (opcional)</li>
+            </ul>
+          </div>
+
+          <div class="card span-8">
+            <h3><i class="fa-solid fa-id-card"></i> 7.2 Registro de atendimento (recepção)</h3>
+            <ul class="list">
+              <li><b>Paciente</b>: selecionar existente ou cadastro rápido</li>
+              <li><b>Cadastro rápido</b>: Nome, Data de Nascimento, CPF (opção “não informado” com responsável clínico obrigatório), Telefone</li>
+              <li><b>Dados adicionais (opcional)</b>: RG, CNS/SUS, raça/cor, etnia, profissão, nacionalidade, mãe, estado civil, cônjuge, endereço (CEP)</li>
+              <li><b>Foto 3x4</b> (opcional)</li>
+              <li><b>Especialidade</b> (herdada ou selecionada)</li>
+              <li><b>Médico responsável</b> (obrigatório ou opcional conforme modelo)</li>
+              <li><b>Procedimentos</b>: vincular (TUSS/SUS) com múltiplos por atendimento</li>
+              <li><b>Origem/Procedência</b>: convênio, particular, SUS, encaminhamento etc.</li>
+              <li>Status atualizado automaticamente para <b>Encaminhado ao Médico</b></li>
+            </ul>
+          </div>
+
+          <div class="card span-12">
+            <h3><i class="fa-solid fa-flag-checkered"></i> 7.3 Finalização (médico ou recepção)</h3>
+            <ul class="list">
+              <li>Hora de saída (obrigatório; auto-preenchida e editável)</li>
+              <li>Motivo/Justificativa (opcional: desistência, encaminhamento etc.)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Regras de exceção -->
+    <section class="section" id="excecoes">
+      <div class="wrap">
+        <div class="sectionHeader">
+          <div>
+            <h2>8) Regras de Exceção</h2>
+            <p>Casos reais do dia a dia com tratamento robusto e reversível, preservando rastreabilidade.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card span-12">
+            <details open>
+              <summary>
+                <div class="sumLeft"><i class="fa-solid fa-triangle-exclamation"></i> Casos de exceção — MVP</div>
+                <div class="sumRight">Recolher/expandir <i class="fa-solid fa-chevron-down chev"></i></div>
+              </summary>
+              <div class="content">
+                <ul>
+                  <li><b>Desistência antes de ser chamado</b>: Recepção usa “Remover/Cancelar Senha” (Aguardando/Chamado → Cancelado/Removido).</li>
+                  <li><b>Desistência após registro (antes do médico)</b>: atendimento pode ser finalizado pela recepção com justificativa (ex.: “Desistência”) e ser reaberto se o paciente retornar.</li>
+                  <li><b>Não Compareceu reversível</b>: “Marcar Não Compareceu” deve permitir “Desfazer Não Compareceu” para correções.</li>
+                  <li><b>Finalizado reversível</b>: recepção e médico podem “Reabrir Atendimento” (Finalizado → Encaminhado) para corrigir finalizações incorretas.</li>
+                  <li><b>CID e Motivo</b>: recomendável lista de motivos e CID no encerramento; CID obrigatório quando encerrado pelo médico.</li>
+                </ul>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Tabela de permissões -->
+    <section class="section" id="permissoes">
+      <div class="wrap">
+        <div class="sectionHeader">
+          <div>
+            <h2>9) Tabela de Permissões (Resumo Operacional)</h2>
+            <p>Matriz de permissões por perfil. Base para configuração e governança de acessos.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card span-12">
+            <div class="tableWrap" role="region" aria-label="Tabela de Permissões">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Ação</th>
+                    <th>Recepção</th>
+                    <th>Médico</th>
+                    <th>Admin</th>
+                    <th>Observações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td data-label="Ação"><b>Emitir Senha</b></td>
+                    <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Admin"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Observações" class="notes">Geração de nova senha para o fluxo.</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Ação"><b>Chamar Próximo</b></td>
+                    <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Admin"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Observações" class="notes">Chamada automática respeitando prioridade/ordem.</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Ação"><b>Chamar Senha Específica</b></td>
+                    <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Admin"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Observações" class="notes">Intervenção manual operacional (logada).</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Ação"><b>Registrar Atendimento</b></td>
+                    <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Admin"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Observações" class="notes">Vincula senha ao paciente e encaminha para fila médica.</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Ação"><b>Marcar/Desfazer Não Compareceu</b></td>
+                    <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Admin"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Observações" class="notes">Previsto com evolução de integração com agenda.</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Ação"><b>Remover/Cancelar Senha</b></td>
+                    <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Admin"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Observações" class="notes">Remove senha do fluxo antes do registro/início.</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Ação"><b>Retornar Senha para Fila</b></td>
+                    <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Admin"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Observações" class="notes">Chamado → Aguardando (quando paciente não aparece no guichê).</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Ação"><b>Tornar/Remover Prioridade</b></td>
+                    <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Admin"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Observações" class="notes">Impacta ordenação nas filas e evidência visual.</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Ação"><b>Chamar Paciente (Médico)</b></td>
+                    <td data-label="Recepção"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Médico"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Admin"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Observações" class="notes">Encaminhado → Em Atendimento (fila filtrada por especialidade).</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Ação"><b>Colocar em Observação</b></td>
+                    <td data-label="Recepção"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Médico"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Admin"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Observações" class="notes">Executada no prontuário e refletida no status.</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Ação"><b>Finalizar Atendimento (Médico)</b></td>
+                    <td data-label="Recepção"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Médico"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Admin"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Observações" class="notes">Registra hora de saída; base para relatórios.</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Ação"><b>Finalizar pela Recepção</b></td>
+                    <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Admin"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Observações" class="notes">Encaminhado → Finalizado (quando médico não finaliza).</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Ação"><b>Reabrir (Finalizado → Encaminhado)</b></td>
+                    <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Médico"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Admin"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Observações" class="notes">Correção de finalizações incorretas / retomada de atendimento.</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Ação"><b>Configurar Especialidades/Filas</b></td>
+                    <td data-label="Recepção"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Admin"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Observações" class="notes">Gestão de dados mestres e divisão de filas.</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Ação"><b>Configurar Regras de Prioridade/Permissões</b></td>
+                    <td data-label="Recepção"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
+                    <td data-label="Admin"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
+                    <td data-label="Observações" class="notes">Define ordenação, alternância e governança de acesso.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="hint" style="margin-top:12px">
+              Recomendação: toda ação manual (chamar senha específica, alterar prioridade, reabrir/finalizar por exceção) deve gerar log para auditoria e rastreabilidade.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. Algoritmo -->
+    <section class="section" id="algoritmo">
+      <div class="wrap">
+        <div class="sectionHeader">
+          <div>
+            <h2>10) Especificação do Algoritmo de Chamada</h2>
+            <p>Motor de ordenação com filtragem por especialidade/divisão, prioridade legal/operacional e FIFO por timestamp, com baixa latência e consistência.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card span-6">
+            <h3><i class="fa-solid fa-arrow-right-to-bracket"></i> 10.1 Entradas</h3>
+            <ul class="list">
+              <li>Especialidade/Divisão (filtro da fila)</li>
+              <li>Conjunto elegível (Aguardando / Encaminhado)</li>
+              <li>Flags de prioridade (legal/operacional)</li>
+              <li>Timestamps (criação e entrada no estado)</li>
+              <li>Perfil do operador (médico vê apenas suas especialidades)</li>
+            </ul>
+          </div>
+
+          <div class="card span-6">
+            <h3><i class="fa-solid fa-gears"></i> 10.2 Regras</h3>
+            <ul class="list">
+              <li>Filtrar sempre por especialidade/divisão</li>
+              <li>Ordenação primária: prioridade (legal/operacional)</li>
+              <li>Ordenação secundária: FIFO por tempo de entrada</li>
+              <li>Regras configuráveis: alternância, limites, desempate</li>
+              <li>Ações manuais permitidas, sempre logadas</li>
+            </ul>
+          </div>
+
+          <div class="card span-12">
+            <h3><i class="fa-solid fa-arrow-up-right-dots"></i> 10.3 Saídas + Não funcionais</h3>
+            <div class="grid">
+              <div class="card span-6" style="box-shadow:none; background:rgba(255,255,255,.02)">
+                <h3><i class="fa-solid fa-list-check"></i> Saídas</h3>
+                <ul class="list">
+                  <li>Próxima senha recomendada</li>
+                  <li>Lista ordenada visível ao operador</li>
+                  <li>Eventos/logs por chamada e alteração</li>
+                  <li>Atualização do painel público e painéis internos</li>
+                </ul>
+              </div>
+              <div class="card span-6" style="box-shadow:none; background:rgba(255,255,255,.02)">
+                <h3><i class="fa-solid fa-shield"></i> Requisitos não funcionais</h3>
+                <ul class="list">
+                  <li>Baixa latência (quase instantâneo)</li>
+                  <li>Consistência (mesma entrada → mesma saída)</li>
+                  <li>Auditoria completa</li>
+                  <li>Prevenção de dupla chamada (controle concorrente)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Carreta -->
+    <section class="section" id="carreta">
+      <div class="wrap">
+        <div class="sectionHeader">
+          <div>
+            <h2>Fluxo de Atendimento — Carreta da Saúde</h2>
+            <p>Jornada ampliada com cadastro robusto, confirmação configurável, especialidades/exames e fechamento diário para prestação de contas.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card span-6">
+            <h3><i class="fa-solid fa-ticket-simple"></i> 1) Geração de senha</h3>
+            <ul class="list">
+              <li>Senha manual (dispensadores físico: azul normal, vermelho prioritária)</li>
+              <li>Totem futuro (tablet + impressora bluetooth)</li>
+              <li>Filas físicas separadas (prioritário x normal; registro x triagem)</li>
+              <li>Limite configurável de senhas diárias (ex.: 150)</li>
+            </ul>
+          </div>
+
+          <div class="card span-6">
+            <h3><i class="fa-solid fa-address-card"></i> 2) Chamada e cadastro</h3>
+            <ul class="list">
+              <li>Chamada sequencial com botões: normal e preferencial</li>
+              <li>Fila única nesta etapa (normal x preferencial) com vários atendentes</li>
+              <li>Cadastro mínimo ampliado: CPF, SUS, endereço via CEP, sexo, telefone, nacionalidade, raça/cor</li>
+              <li>Foto via webcam e anexos (RG/CPF/CNH/comprovante) com classificação</li>
+              <li>Convênio padrão: Prefeitura Duque de Caxias; especialidade default: clínico geral</li>
+              <li>Emissão de ficha com dados e termos para assinatura</li>
+            </ul>
+          </div>
+
+          <div class="card span-12">
+            <h3><i class="fa-solid fa-user-doctor"></i> 3) Atendimento clínico</h3>
+            <ul class="list">
+              <li>Paciente entra na fila clínica após cadastro</li>
+              <li>Mais de um médico na mesma fila</li>
+              <li>Regra de alternância prioritária configurável (ex.: chamar 1 prioritário a cada X normais)</li>
+              <li>Registro no prontuário: anamnese, evolução, atestado, receituário, solicitação de exame externo</li>
+              <li>Atendimento computado para cobrança (tabela de procedimentos)</li>
+            </ul>
+          </div>
+
+          <div class="card span-6">
+            <h3><i class="fa-solid fa-square-check"></i> 4) Confirmação de encaminhamento (configurável)</h3>
+            <ul class="list">
+              <li>Etapa opcional: ativa/inativa por cliente</li>
+              <li>Atendente confirma dados e encaminhamento</li>
+              <li>Paciente entra na fila da especialidade/exame correspondente</li>
+              <li>Impressão de protocolo para lista de espera (dias seguintes)</li>
+            </ul>
+          </div>
+
+          <div class="card span-6">
+            <h3><i class="fa-solid fa-flask-vial"></i> 5) Especialidades / exames / procedimentos</h3>
+            <ul class="list">
+              <li>Profissional chama paciente e registra no prontuário</li>
+              <li>Pode finalizar ou encaminhar para nova especialidade/exame</li>
+              <li>Computa produção para cobrança por procedimento</li>
+            </ul>
+          </div>
+
+          <div class="card span-12">
+            <h3><i class="fa-solid fa-file-signature"></i> 6) Finalização, relatórios, repasse e fechamento</h3>
+            <ul class="list">
+              <li>Relatório automático do fluxo do paciente para assinatura (parâmetro imprime/não imprime)</li>
+              <li>Relatório de produção por médico no período</li>
+              <li>Parâmetros de repasse médico: por plantão ou produtividade, variando por especialidade/profissional</li>
+              <li>Fechamento diário: relatório detalhado para prestação de contas à prefeitura</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Parâmetros -->
+    <section class="section" id="parametros">
+      <div class="wrap">
+        <div class="sectionHeader">
+          <div>
+            <h2>Parâmetros e Configurações (Checklist de Go)</h2>
+            <p>Itens que precisam estar “setados” para operar com previsibilidade e rastreabilidade.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card span-6">
+            <h3><i class="fa-solid fa-sliders"></i> Operação e fluxo</h3>
+            <ul class="list">
+              <li>Confirmação de atendimento (utiliza / não utiliza)</li>
+              <li>Impressão de relatórios no final (imprime / não imprime)</li>
+              <li>Modelo de atribuição médica (A/B)</li>
+              <li>Regras do painel (som, destaque, histórico)</li>
+            </ul>
+          </div>
+
+          <div class="card span-6">
+            <h3><i class="fa-solid fa-layer-group"></i> Dados mestres e limites</h3>
+            <ul class="list">
+              <li>Especialidades, divisões de fila e guichês</li>
+              <li>Tabela de procedimentos com grupo/classificação</li>
+              <li>Limite máximo por procedimento/grupo por período e convênio (mensal/anual/personalizado)</li>
+              <li>Regras de prioridade (legal/operacional) e alternância</li>
+            </ul>
+          </div>
+
+          <div class="card span-12">
+            <h3><i class="fa-solid fa-user-shield"></i> Governança de acesso</h3>
+            <p>
+              Permissões por perfil devem estar alinhadas com o modelo operacional do cliente.
+              Recomenda-se trilha de auditoria para: chamadas manuais, alterações de prioridade, reaberturas, finalizações por exceção e mudanças de parâmetros.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="footer">
+      <div class="wrap">
+        <div class="line">
+          <div>
+            <b style="color: rgba(255,255,255,.82);">MVP Fluxo de Atendimento</b>
+            <div style="margin-top:4px">Documento de apresentação — versão HTML responsiva para Kickoff/Onboarding.</div>
+          </div>
+          <div>
+            <span class="kbd">Ctrl</span> + <span class="kbd">F</span> para buscar termos •
+            <a class="kbd" href="#top">Topo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Active nav highlight on scroll (simple + robust)
+    const chips = Array.from(document.querySelectorAll(".chip"));
+    const sections = chips
+      .map(a => document.querySelector(a.getAttribute("href")))
+      .filter(Boolean);
+
+    function setActive(id){
+      chips.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + id));
+    }
+
+    const obs = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter(e => e.isIntersecting)
+        .sort((a,b)=> b.intersectionRatio - a.intersectionRatio)[0];
+      if(visible && visible.target && visible.target.id){
+        setActive(visible.target.id);
+      }
+    }, { root: null, rootMargin: "-35% 0px -55% 0px", threshold: [0.06, 0.12, 0.18] });
+
+    sections.forEach(s => obs.observe(s));
+
+    // Smooth anchor offset for sticky header
+    chips.forEach(a => {
+      a.addEventListener("click", (ev) => {
+        const href = a.getAttribute("href");
+        if(!href || !href.startsWith("#")) return;
+        const el = document.querySelector(href);
+        if(!el) return;
+        ev.preventDefault();
+        const y = el.getBoundingClientRect().top + window.scrollY - 78;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      });
+    });
+  </script>
+</body>
+</html>
