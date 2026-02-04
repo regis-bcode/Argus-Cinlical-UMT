@@ -30,9 +30,6 @@
 
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-
-      --slide-w: 1366; /* base */
-      --slide-h: 768;  /* 16:9 */
     }
 
     *{box-sizing:border-box}
@@ -223,13 +220,13 @@
       place-items:center;
     }
 
-    /* slide scaling wrapper */
     .viewport{
       width: min(100%, 1366px);
       aspect-ratio: 16/9;
       position:relative;
       transform-origin: top left;
     }
+
     .slide{
       position:absolute;
       inset:0;
@@ -255,8 +252,8 @@
     }
     .slide > *{position:relative}
 
-    /* slide layout */
     .pad{padding: 40px 48px}
+
     .topline{
       display:flex;
       align-items:center;
@@ -275,6 +272,7 @@
       color: rgba(255,255,255,.82);
       font-size: 12px;
       letter-spacing:.25px;
+      white-space:nowrap;
     }
     .kicker i{opacity:.95}
 
@@ -363,6 +361,7 @@
       font-size: 13px;
       line-height: 1.55;
     }
+
     ul{
       margin: 10px 0 0;
       padding-left: 18px;
@@ -378,7 +377,6 @@
       opacity:.9;
     }
 
-    /* “PPT-like” footer inside slide */
     .slideFooter{
       position:absolute;
       left: 0;
@@ -410,9 +408,9 @@
       color: rgba(255,255,255,.75);
     }
 
-    /* State grid (PPT slide) */
+    /* States (simetria) */
     .statesGrid{
-      margin-top: 16px;
+      margin-top: 14px;
       display:grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
@@ -488,12 +486,6 @@
       line-height: 1.45;
     }
 
-    .split{
-      margin-top: 16px;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
     .box{
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.12);
@@ -508,7 +500,7 @@
       align-items:center;
       gap:10px;
     }
-    .box p, .box .monoLine{
+    .box p{
       margin:0;
       color: rgba(255,255,255,.66);
       font-size: 12.5px;
@@ -516,7 +508,7 @@
     }
     .monoLine{font-family: var(--mono);}
 
-    /* Responsive (still “PPT-like”) */
+    /* Responsive */
     @media (max-width: 1100px){
       .app{grid-template-columns: 250px 1fr;}
     }
@@ -530,7 +522,6 @@
       .grid2{grid-template-columns: 1fr;}
       .grid3{grid-template-columns: 1fr;}
       .statesGrid{grid-template-columns: repeat(2, minmax(0,1fr));}
-      .split{grid-template-columns: 1fr;}
     }
     @media (max-width: 560px){
       .statesGrid{grid-template-columns: 1fr;}
@@ -574,7 +565,7 @@
     <main class="stage" aria-label="Apresentação">
       <div class="viewport" id="viewport">
 
-        <!-- SLIDE 1: Cover -->
+        <!-- 01: Cover -->
         <section class="slide active" data-title="Capa" data-sub="Onboarding & Kickoff" id="s1">
           <div class="pad">
             <div class="topline">
@@ -588,7 +579,7 @@
 
             <h1>Argus Clinical</h1>
             <p class="sub">
-              Estrutura executiva para alinhamento de escopo, metodologia, fluxo operacional e critérios de sucesso.
+              Estrutura executiva para alinhamento de escopo, governança, fluxo operacional e critérios de sucesso.
               Objetivo: reduzir fricção na ponta, garantir rastreabilidade e acelerar valor percebido.
             </p>
 
@@ -603,7 +594,7 @@
                 </ul>
               </div>
               <div class="card">
-                <h3><i class="fa-solid fa-list-check"></i> Entregáveis desta fase</h3>
+                <h3><i class="fa-solid fa-list-check"></i> Entregas desta etapa</h3>
                 <ul>
                   <li>Fluxo: senha → recepção → fila médica → atendimento → observação → finalização.</li>
                   <li>Reversões operacionais e reabertura por perfil.</li>
@@ -622,7 +613,7 @@
           </div>
         </section>
 
-        <!-- SLIDE 2: Agenda -->
+        <!-- 02: Agenda -->
         <section class="slide" data-title="Agenda" data-sub="Roteiro de alinhamento" id="s2">
           <div class="pad">
             <div class="topline">
@@ -653,7 +644,7 @@
                 <ul>
                   <li>Parâmetros e configurações de Go.</li>
                   <li>Cadência de rituais e comunicação.</li>
-                  <li>Próximos passos (30-60-90) e checkpoints.</li>
+                  <li>Próximos passos e checkpoints.</li>
                 </ul>
               </div>
             </div>
@@ -666,53 +657,8 @@
           </div>
         </section>
 
-        <!-- SLIDE 3: Metodologia -->
-        <section class="slide" data-title="Metodologia" data-sub="Governança de implantação" id="s3">
-          <div class="pad">
-            <div class="topline">
-              <div class="kicker"><i class="fa-solid fa-compass-drafting"></i> Metodologia</div>
-              <div class="metaRight">
-                <span class="pill acc"><i class="fa-solid fa-door-open"></i> Gates</span>
-                <span class="pill good"><i class="fa-solid fa-handshake"></i> Colaboração</span>
-              </div>
-            </div>
-
-            <h2>Metodologia de Implantação do Argus Clinical</h2>
-            <p class="sub">
-              Abordagem híbrida orientada a valor, com gates de decisão e governança objetiva para evitar ruptura de escopo,
-              mitigar riscos e garantir previsibilidade de entrega.
-            </p>
-
-            <div class="grid2">
-              <div class="card">
-                <h3><i class="fa-solid fa-road"></i> Fases (macro)</h3>
-                <ul>
-                  <li><b>Discovery</b>: entendimento do fluxo real, regras, exceções e perfis.</li>
-                  <li><b>Design</b>: baseline funcional (filas, estados, prioridade, parâmetros).</li>
-                  <li><b>Build</b>: implementação e configuração, com validação contínua.</li>
-                  <li><b>Validate</b>: testes ponta-a-ponta, critérios de aceite e evidências.</li>
-                  <li><b>Deploy</b>: entrada em operação e estabilização (operação assistida).</li>
-                </ul>
-              </div>
-              <div class="card">
-                <h3><i class="fa-solid fa-user-shield"></i> Governança (rituais)</h3>
-                <ul>
-                  <li>Ritual semanal de status (risco, bloqueio, decisão e plano de ação).</li>
-                  <li>Gestão de mudanças: impacto, aprovação e rastreabilidade.</li>
-                  <li>Escalonamento: SLA interno e trilha de auditoria.</li>
-                  <li>Gate: “não avança sem critério de entrada atendido”.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="slideFooter">
-            <div class="hint"><span><i class="fa-solid fa-circle-check"></i> Diretriz: controle de escopo + entrega de valor frequente.</span></div>
-            <div class="hint"><span class="bigNumber">Slide 03</span></div>
-          </div>
-        </section>
-
-        <!-- SLIDE 4: Visão / Escopo -->
-        <section class="slide" data-title="Escopo" data-sub="Objetivo e boundaries" id="s4">
+        <!-- 03: Escopo -->
+        <section class="slide" data-title="Escopo" data-sub="Objetivo e boundaries" id="s3">
           <div class="pad">
             <div class="topline">
               <div class="kicker"><i class="fa-solid fa-bullseye"></i> Escopo</div>
@@ -749,12 +695,12 @@
           </div>
           <div class="slideFooter">
             <div class="hint"><span><i class="fa-solid fa-clipboard-check"></i> Baseline evita divergência entre “dito” e “entregue”.</span></div>
-            <div class="hint"><span class="bigNumber">Slide 04</span></div>
+            <div class="hint"><span class="bigNumber">Slide 03</span></div>
           </div>
         </section>
 
-        <!-- SLIDE 5: Princípios -->
-        <section class="slide" data-title="Princípios" data-sub="Diretrizes de desenho" id="s5">
+        <!-- 04: Princípios -->
+        <section class="slide" data-title="Princípios" data-sub="Diretrizes de desenho" id="s4">
           <div class="pad">
             <div class="topline">
               <div class="kicker"><i class="fa-solid fa-compass"></i> Princípios</div>
@@ -779,12 +725,12 @@
           </div>
           <div class="slideFooter">
             <div class="hint"><span><i class="fa-solid fa-shield"></i> Diretriz: consistência + auditabilidade (logs).</span></div>
-            <div class="hint"><span class="bigNumber">Slide 05</span></div>
+            <div class="hint"><span class="bigNumber">Slide 04</span></div>
           </div>
         </section>
 
-        <!-- SLIDE 6: Filas -->
-        <section class="slide" data-title="Filas" data-sub="Estrutura e segmentação" id="s6">
+        <!-- 05: Filas -->
+        <section class="slide" data-title="Filas" data-sub="Estrutura e segmentação" id="s5">
           <div class="pad">
             <div class="topline">
               <div class="kicker"><i class="fa-solid fa-layer-group"></i> Filas</div>
@@ -813,12 +759,12 @@
           </div>
           <div class="slideFooter">
             <div class="hint"><span><i class="fa-solid fa-lock"></i> Baseline: fila médica não é genérica.</span></div>
-            <div class="hint"><span class="bigNumber">Slide 06</span></div>
+            <div class="hint"><span class="bigNumber">Slide 05</span></div>
           </div>
         </section>
 
-        <!-- SLIDE 7: Estados -->
-        <section class="slide" data-title="Estados" data-sub="Máquina de estados" id="s7">
+        <!-- 06: Estados -->
+        <section class="slide" data-title="Estados" data-sub="Máquina de estados" id="s6">
           <div class="pad">
             <div class="topline">
               <div class="kicker"><i class="fa-solid fa-diagram-project"></i> Máquina de Estados</div>
@@ -843,7 +789,7 @@
                   <div class="state">
                     <div class="stateTop">
                       <div class="stateName">Chamado (Recepção)</div>
-                      <div class="tag warn">Chamada</div>
+                      <div class="tag.warn tag">Chamada</div>
                     </div>
                     <p class="stateDesc">Senha chamada; aguardando apresentação para registro.</p>
                   </div>
@@ -921,16 +867,15 @@
                 </div>
               </div>
             </div>
-
           </div>
           <div class="slideFooter">
             <div class="hint"><span><i class="fa-solid fa-rotate-left"></i> Reabertura e reversão são recursos core do fluxo.</span></div>
-            <div class="hint"><span class="bigNumber">Slide 07</span></div>
+            <div class="hint"><span class="bigNumber">Slide 06</span></div>
           </div>
         </section>
 
-        <!-- SLIDE 8: Perfis -->
-        <section class="slide" data-title="Perfis" data-sub="Ações por perfil" id="s8">
+        <!-- 07: Perfis -->
+        <section class="slide" data-title="Perfis" data-sub="Ações por perfil" id="s7">
           <div class="pad">
             <div class="topline">
               <div class="kicker"><i class="fa-solid fa-user-shield"></i> Perfis</div>
@@ -972,12 +917,12 @@
           </div>
           <div class="slideFooter">
             <div class="hint"><span><i class="fa-solid fa-clipboard-check"></i> Recomendação: toda intervenção manual deve ser logada.</span></div>
-            <div class="hint"><span class="bigNumber">Slide 08</span></div>
+            <div class="hint"><span class="bigNumber">Slide 07</span></div>
           </div>
         </section>
 
-        <!-- SLIDE 9: Prioridade -->
-        <section class="slide" data-title="Prioridade" data-sub="Base legal e regras" id="s9">
+        <!-- 08: Prioridade -->
+        <section class="slide" data-title="Prioridade" data-sub="Base legal e regras" id="s8">
           <div class="pad">
             <div class="topline">
               <div class="kicker"><i class="fa-solid fa-scale-balanced"></i> Prioridade</div>
@@ -986,7 +931,7 @@
 
             <h2>Prioridade / Senha Preferencial (Brasil)</h2>
             <p class="sub">
-              O sistema deve garantir identificação, evidência visual, ordenação e auditoria de prioridade legal e operacional.
+              O sistema garante identificação, evidência visual, ordenação e auditoria de prioridade legal e operacional.
             </p>
 
             <div class="grid2">
@@ -1011,12 +956,12 @@
           </div>
           <div class="slideFooter">
             <div class="hint"><span><i class="fa-solid fa-shield"></i> Controle: logs + consistência do algoritmo.</span></div>
-            <div class="hint"><span class="bigNumber">Slide 09</span></div>
+            <div class="hint"><span class="bigNumber">Slide 08</span></div>
           </div>
         </section>
 
-        <!-- SLIDE 10: Algoritmo -->
-        <section class="slide" data-title="Algoritmo" data-sub="Chamada e ordenação" id="s10">
+        <!-- 09: Algoritmo -->
+        <section class="slide" data-title="Algoritmo" data-sub="Chamada e ordenação" id="s9">
           <div class="pad">
             <div class="topline">
               <div class="kicker"><i class="fa-solid fa-wand-magic-sparkles"></i> Motor de Chamada</div>
@@ -1060,12 +1005,12 @@
           </div>
           <div class="slideFooter">
             <div class="hint"><span><i class="fa-solid fa-lock"></i> Auditoria é requisito de primeira classe.</span></div>
-            <div class="hint"><span class="bigNumber">Slide 10</span></div>
+            <div class="hint"><span class="bigNumber">Slide 09</span></div>
           </div>
         </section>
 
-        <!-- SLIDE 11: Campos -->
-        <section class="slide" data-title="Campos" data-sub="Dados mínimos" id="s11">
+        <!-- 10: Campos -->
+        <section class="slide" data-title="Campos" data-sub="Dados mínimos" id="s10">
           <div class="pad">
             <div class="topline">
               <div class="kicker"><i class="fa-solid fa-id-card"></i> Dados</div>
@@ -1105,12 +1050,12 @@
           </div>
           <div class="slideFooter">
             <div class="hint"><span><i class="fa-solid fa-circle-info"></i> Regra: captura mínima sem travar operação.</span></div>
-            <div class="hint"><span class="bigNumber">Slide 11</span></div>
+            <div class="hint"><span class="bigNumber">Slide 10</span></div>
           </div>
         </section>
 
-        <!-- SLIDE 12: Carreta -->
-        <section class="slide" data-title="Carreta" data-sub="Fluxo Carreta da Saúde" id="s12">
+        <!-- 11: Carreta -->
+        <section class="slide" data-title="Carreta" data-sub="Fluxo Carreta da Saúde" id="s11">
           <div class="pad">
             <div class="topline">
               <div class="kicker"><i class="fa-solid fa-truck-medical"></i> Carreta da Saúde</div>
@@ -1142,12 +1087,12 @@
           </div>
           <div class="slideFooter">
             <div class="hint"><span><i class="fa-solid fa-sliders"></i> Parâmetros-chave: impressão, confirmação, alternância e limites.</span></div>
-            <div class="hint"><span class="bigNumber">Slide 12</span></div>
+            <div class="hint"><span class="bigNumber">Slide 11</span></div>
           </div>
         </section>
 
-        <!-- SLIDE 13: Parâmetros -->
-        <section class="slide" data-title="Parâmetros" data-sub="Checklist de configuração" id="s13">
+        <!-- 12: Parâmetros -->
+        <section class="slide" data-title="Parâmetros" data-sub="Checklist de configuração" id="s12">
           <div class="pad">
             <div class="topline">
               <div class="kicker"><i class="fa-solid fa-sliders"></i> Parâmetros</div>
@@ -1184,13 +1129,103 @@
             </div>
           </div>
           <div class="slideFooter">
-            <div class="hint"><span><i class="fa-solid fa-shield"></i> Governança: mudanças em parâmetros devem ser rastreadas.</span></div>
+            <div class="hint"><span><i class="fa-solid fa-shield"></i> Mudanças em parâmetros devem ser rastreadas.</span></div>
+            <div class="hint"><span class="bigNumber">Slide 12</span></div>
+          </div>
+        </section>
+
+        <!-- 13: Metodologia (PENÚLTIMO) -->
+        <section class="slide" data-title="Metodologia AGF" data-sub="ARGUS GATE FRAMEWORK" id="s13">
+          <div class="pad">
+            <div class="topline">
+              <div class="kicker"><i class="fa-solid fa-eye"></i> AGF — ARGUS GATE FRAMEWORK</div>
+              <div class="metaRight">
+                <span class="pill acc"><i class="fa-solid fa-door-open"></i> Gates Decisórios</span>
+                <span class="pill good"><i class="fa-solid fa-shield"></i> Governança</span>
+              </div>
+            </div>
+
+            <h2>Visão Contínua, Decisão Controlada e Avanço Consciente</h2>
+            <p class="sub">
+              A <b>AGF – Argus Gate Framework</b> é a metodologia proprietária da Baumgratz Code
+              para condução de projetos complexos com governança objetiva, foco em valor e previsibilidade de resultados.
+              <br><br>
+              Inspirada nas melhores práticas do <b>PMI</b> e nos princípios da <b>metodologia Ágil</b>,
+              a AGF organiza o ciclo de vida do projeto por meio de <b>GATES decisórios</b>,
+              que funcionam como portas de qualificação obrigatória para a evolução do projeto.
+            </p>
+
+            <div class="grid2">
+              <div class="card" style="min-height:auto;">
+                <h3><i class="fa-solid fa-compass-drafting"></i> Princípios da AGF</h3>
+                <ul>
+                  <li><b>Visão Contínua</b> — acompanhamento permanente, com transparência de riscos, dependências e impactos.</li>
+                  <li><b>Decisão Controlada</b> — avanços baseados em critérios objetivos, evidências e alinhamento entre as partes.</li>
+                  <li><b>Avanço Consciente</b> — cada etapa só inicia quando existem condições reais de sucesso, protegendo o investimento.</li>
+                </ul>
+              </div>
+
+              <div class="card" style="min-height:auto;">
+                <h3><i class="fa-solid fa-lock"></i> Regras Fundamentais dos Gates</h3>
+                <ul>
+                  <li>Cada Gate é um <b>ponto formal de decisão</b>.</li>
+                  <li>O projeto só avança com <b>100% dos critérios</b> atendidos.</li>
+                  <li><b>Sem avanço parcial</b>, exceções implícitas ou decisões informais.</li>
+                  <li>Decisões documentadas, rastreáveis e validadas.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="card" style="margin-top:14px; min-height:auto;">
+              <h3><i class="fa-solid fa-diagram-project"></i> Estrutura de Governança por Gates</h3>
+              <div class="grid3" style="margin-top:12px">
+                <div class="card" style="min-height:auto;">
+                  <h3>Gate 1 — Vendas</h3>
+                  <p>Decisão consciente de investimento.</p>
+                </div>
+                <div class="card" style="min-height:auto;">
+                  <h3>Gate 2 — Arquitetura</h3>
+                  <p>Validação técnica e operacional da solução.</p>
+                </div>
+                <div class="card" style="min-height:auto;">
+                  <h3>Gate 3 — Transição Interna</h3>
+                  <p>Alinhamento interno completo antes da execução.</p>
+                </div>
+                <div class="card" style="min-height:auto;">
+                  <h3>Gate 4 — Onboarding</h3>
+                  <p>Kickoff, governança e autorização formal da execução.</p>
+                </div>
+                <div class="card" style="min-height:auto;">
+                  <h3>Gate 5 — Implantação</h3>
+                  <p>Execução controlada com iniciação, planejamento, execução, monitoramento e encerramento.</p>
+                </div>
+                <div class="card" style="min-height:auto;">
+                  <h3>Gate 6 — Suporte</h3>
+                  <p>Passagem de bastão formal e encerramento estruturado do projeto.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" style="margin-top:14px; min-height:auto;">
+              <h3><i class="fa-solid fa-star"></i> Benefícios para o Cliente</h3>
+              <ul>
+                <li>Redução de riscos e retrabalho</li>
+                <li>Maior previsibilidade de prazo, custo e resultado</li>
+                <li>Clareza de papéis, responsabilidades e decisões</li>
+                <li>Governança sem burocracia excessiva</li>
+                <li>Transparência total ao longo do projeto</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="slideFooter">
+            <div class="hint"><span><i class="fa-solid fa-check-circle"></i> Na AGF, só avança quem está pronto.</span></div>
             <div class="hint"><span class="bigNumber">Slide 13</span></div>
           </div>
         </section>
 
-        <!-- SLIDE 14: Próximos passos -->
-        <section class="slide" data-title="Próximos passos" data-sub="30-60-90 + gates" id="s14">
+        <!-- 14: Próximos passos -->
+        <section class="slide" data-title="Próximos passos" data-sub="Plano e checkpoints" id="s14">
           <div class="pad">
             <div class="topline">
               <div class="kicker"><i class="fa-solid fa-forward"></i> Próximos passos</div>
@@ -1208,12 +1243,12 @@
                 </ul>
               </div>
               <div class="card">
-                <h3><i class="fa-solid fa-door-closed"></i> Gates de decisão</h3>
+                <h3><i class="fa-solid fa-door-closed"></i> Checkpoints de decisão</h3>
                 <ul>
-                  <li>Gate 1: dados mestres e permissões aprovados.</li>
-                  <li>Gate 2: algoritmo + prioridade + painéis validados.</li>
-                  <li>Gate 3: testes ponta-a-ponta com evidência.</li>
-                  <li>Gate 4: entrada em operação com operação assistida.</li>
+                  <li>Dados mestres e permissões aprovados.</li>
+                  <li>Algoritmo + prioridade + painéis validados.</li>
+                  <li>Testes ponta-a-ponta com evidência.</li>
+                  <li>Entrada em operação com estabilização.</li>
                 </ul>
               </div>
             </div>
@@ -1281,7 +1316,6 @@
       count.textContent = `${pad2(idx+1)}/${pad2(total)}`;
       progressBar.style.width = `${((idx+1)/total)*100}%`;
 
-      // update hash for deep link
       const id = slides[idx].id || `s${idx+1}`;
       history.replaceState(null, "", `#${id}`);
     }
@@ -1290,7 +1324,6 @@
       idx = Math.max(0, Math.min(slides.length-1, i));
       setActive();
 
-      // keep active thumb visible (only when sidebar exists)
       if(!fromClick){
         const activeThumb = thumbs.querySelector(".thumb.active");
         if(activeThumb) activeThumb.scrollIntoView({block:"nearest"});
@@ -1346,20 +1379,12 @@
       if(i >= 0) idx = i;
     }
 
-    // Fit to viewport (consistent 16:9 scale)
+    // Fit viewport (keep 16:9 inside screen)
     function fit(){
       const stage = viewport.parentElement;
-      const w = stage.clientWidth;
       const h = stage.clientHeight;
-
-      // viewport has intrinsic aspect ratio, but we keep it visually centered and ensure no overflow
-      // We only need minor adjustments: ensure width capped and centered is already handled.
-      // For fullscreen and very tall screens, keep max height by scaling down.
-      const targetW = viewport.getBoundingClientRect().width;
-      const targetH = viewport.getBoundingClientRect().height;
-
-      // If height is too large, scale down.
-      const scale = Math.min(1, (h - 0) / targetH);
+      const rect = viewport.getBoundingClientRect();
+      const scale = Math.min(1, (h) / rect.height);
       viewport.style.transform = `scale(${scale})`;
     }
 
