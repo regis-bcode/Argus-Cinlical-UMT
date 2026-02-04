@@ -303,7 +303,6 @@
     .span-8{grid-column: span 8}
     .span-12{grid-column: span 12}
 
-    /* Flow / state machine */
     .stateWrap{
       display:grid;
       grid-template-columns: 1fr;
@@ -385,7 +384,6 @@
     .kvi span{display:block; font-size: 12px; color: var(--muted); line-height:1.4}
     .mono{font-family:var(--mono)}
 
-    /* Accordion */
     details{
       border-radius: 18px;
       border: 1px solid var(--stroke);
@@ -424,7 +422,6 @@
     .content ul{margin: 8px 0 0; padding-left: 18px}
     .content li{margin: 6px 0}
 
-    /* Tables */
     .tableWrap{
       border-radius: 18px;
       border: 1px solid var(--stroke);
@@ -452,19 +449,6 @@
     tbody tr:hover td{
       background: rgba(255,255,255,.02);
     }
-    .role{
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.02);
-      font-size: 12px;
-      color: rgba(255,255,255,.78);
-      white-space:nowrap;
-    }
-    .role.rec{border-color: rgba(41,211,255,.35); background: rgba(41,211,255,.08)}
-    .role.med{border-color: rgba(46,229,157,.35); background: rgba(46,229,157,.08)}
-    .role.adm{border-color: rgba(124,92,255,.35); background: rgba(124,92,255,.08)}
     .permit{
       display:inline-flex; align-items:center; gap:8px;
       padding: 6px 10px;
@@ -482,7 +466,6 @@
       line-height:1.45;
     }
 
-    /* Footer */
     .footer{
       padding: 28px 0 34px;
       color: rgba(255,255,255,.62);
@@ -503,7 +486,6 @@
       color: rgba(255,255,255,.75);
     }
 
-    /* Responsive */
     @media (max-width: 980px){
       .heroGrid{grid-template-columns: 1fr}
       .brand{min-width:auto}
@@ -531,7 +513,6 @@
       }
     }
 
-    /* Print */
     @media print{
       .topbar, .heroActions, .btn, .chip {display:none !important}
       body{background:#fff; color:#111}
@@ -548,13 +529,13 @@
         <div class="brand">
           <div class="logo" aria-hidden="true"><i class="fa-solid fa-stethoscope"></i></div>
           <div class="t">
-            <b>MVP — Fluxo de Atendimento</b>
+            <b>Fluxo de Atendimento</b>
             <span>Senhas • Painéis • Registro • Encaminhamento • Atendimento</span>
           </div>
         </div>
 
         <nav class="nav" aria-label="Menu">
-          <a class="chip" href="#mvp"><i class="fa-solid fa-bullseye"></i> MVP</a>
+          <a class="chip" href="#objetivo"><i class="fa-solid fa-bullseye"></i> Objetivo</a>
           <a class="chip" href="#design"><i class="fa-solid fa-compass-drafting"></i> Princípios</a>
           <a class="chip" href="#filas"><i class="fa-solid fa-layer-group"></i> Filas</a>
           <a class="chip" href="#estados"><i class="fa-solid fa-diagram-project"></i> Estados</a>
@@ -576,19 +557,19 @@
         <div class="heroGrid">
           <div class="headline">
             <div class="kicker">
-              <span class="pill"><i class="fa-solid fa-bolt"></i> MVP pronto para operação</span>
+              <span class="pill"><i class="fa-solid fa-bolt"></i> Pronto para operação</span>
               <span style="color: rgba(255,255,255,.68)">Governança • Simplicidade • Auditabilidade</span>
             </div>
 
             <h1>Consolidação do Fluxo de Atendimento</h1>
             <p class="sub">
-              Documento de apresentação do MVP com visão ponta-a-ponta: emissão de senhas, painéis de chamadas,
+              Documento de apresentação com visão ponta-a-ponta: emissão de senhas, painéis de chamadas,
               registro administrativo, fila médica por especialidade (ou médico indicado), atendimento, observação,
               finalização e reversões operacionais. Estruturado para alinhamento com stakeholders e execução com previsibilidade.
             </p>
 
             <div class="heroActions">
-              <a class="btn primary" href="#mvp"><i class="fa-solid fa-play"></i> Iniciar pelo MVP</a>
+              <a class="btn primary" href="#objetivo"><i class="fa-solid fa-play"></i> Iniciar pelo objetivo</a>
               <a class="btn" href="#estados"><i class="fa-solid fa-diagram-project"></i> Ver máquina de estados</a>
               <a class="btn" href="#carreta"><i class="fa-solid fa-truck-medical"></i> Ver Carreta da Saúde</a>
               <a class="btn" href="#permissoes"><i class="fa-solid fa-table"></i> Ver permissões</a>
@@ -633,12 +614,12 @@
       </div>
     </section>
 
-    <!-- 1. MVP -->
-    <section class="section" id="mvp">
+    <!-- 1. Objetivo e Escopo -->
+    <section class="section" id="objetivo">
       <div class="wrap">
         <div class="sectionHeader">
           <div>
-            <h2>1) Objetivo e Escopo do MVP</h2>
+            <h2>1) Objetivo e Escopo</h2>
             <p>Baseline do produto para operação inicial: velocidade, clareza operacional e capacidade de desfazer ações (fluxo real de clínica).</p>
           </div>
         </div>
@@ -656,13 +637,14 @@
           </div>
 
           <div class="card span-5">
-            <h3><i class="fa-solid fa-sitemap"></i> Escopo contemplado</h3>
+            <h3><i class="fa-solid fa-sitemap"></i> Escopo abrange</h3>
             <ul class="list">
               <li>Emissão de senhas para filas diversas</li>
               <li>Chamada e registro administrativo (recepção)</li>
-              <li>Fila médica segmentada por especialidade (ou médico indicado)</li>
-              <li>Atendimento médico com observação e finalização com hora de saída</li>
+              <li>Gerenciamento da fila de pacientes aguardando o médico</li>
+              <li>Atendimento médico com observação e finalização (hora de saída)</li>
               <li>Reversões: remover senha, retornar à fila, priorizar, reabrir atendimento</li>
+              <li>Recepção pode finalizar e reabrir; médico pode reabrir</li>
             </ul>
           </div>
 
@@ -727,15 +709,15 @@
             <ul class="list">
               <li><b>Divisões</b>: por especialidade (recomendado), tipo de senha ou guichê</li>
               <li><b>Operação</b>: chamar próximo (ordem/prioridade) ou chamar senha específica</li>
-              <li><b>Uso prático</b>: suporta múltiplos atendentes operando nas mesmas filas</li>
+              <li><b>Uso</b>: múltiplos atendentes operando nas mesmas filas</li>
             </ul>
           </div>
 
           <div class="card span-6">
             <h3><i class="fa-solid fa-user-doctor"></i> 3.2 Fila para atendimento médico</h3>
             <ul class="list">
-              <li><b>Critério de especialidade</b>: paciente de Cardiologia só é visível/chamável por médicos da Cardiologia</li>
-              <li><b>Segmentação</b>: fila “Encaminhado ao Médico” é sempre filtrada por especialidade (baseline)</li>
+              <li><b>Critério de especialidade</b>: paciente só é visível/chamável por médicos da especialidade</li>
+              <li><b>Segmentação</b>: fila “Encaminhado ao Médico” filtrada por especialidade (baseline)</li>
             </ul>
             <div class="hint">
               Atribuição pode ser por plantão (qualquer médico da especialidade) ou por médico responsável, conforme parâmetro.
@@ -765,13 +747,13 @@
         <div class="sectionHeader">
           <div>
             <h2>4) Máquina de Estados</h2>
-            <p>Estados mínimos do MVP, estados futuros previstos e transições-chave por perfil. Base para governança e auditoria.</p>
+            <p>Estados mínimos, estados futuros previstos e transições-chave por perfil. Base para governança e auditoria.</p>
           </div>
         </div>
 
         <div class="grid">
           <div class="card span-8">
-            <h3><i class="fa-solid fa-diagram-project"></i> 4.1 Estados mínimos (MVP)</h3>
+            <h3><i class="fa-solid fa-diagram-project"></i> 4.1 Estados mínimos</h3>
 
             <div class="stateWrap">
               <div class="states">
@@ -874,26 +856,26 @@
               <li>Atendimento interrompido (para remarcação/agenda e cirúrgicos)</li>
             </ul>
             <div class="hint">
-              Itens futuros ficam no backlog (parking lot) para evitar ruptura de escopo do MVP.
+              Itens futuros ficam no backlog (parking lot) para evitar ruptura de escopo.
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 5. Transições por perfil -->
+    <!-- 5. Perfis -->
     <section class="section" id="perfis">
       <div class="wrap">
         <div class="sectionHeader">
           <div>
-            <h2>5) Transições Permitidas por Perfil</h2>
+            <h2>5) Ações por Perfil</h2>
             <p>Distribuição de capabilities por perfil, com destaque para reversões e reabertura.</p>
           </div>
         </div>
 
         <div class="grid">
           <div class="card span-4">
-            <h3><i class="fa-solid fa-headset"></i> 5.1 Recepção</h3>
+            <h3><i class="fa-solid fa-headset"></i> Recepção</h3>
             <ul class="list">
               <li>Chamar próximo / senha específica</li>
               <li>Registrar atendimento e encaminhar ao médico</li>
@@ -905,7 +887,7 @@
           </div>
 
           <div class="card span-4">
-            <h3><i class="fa-solid fa-user-doctor"></i> 5.2 Médico</h3>
+            <h3><i class="fa-solid fa-user-doctor"></i> Médico</h3>
             <ul class="list">
               <li>Chamar paciente (fila da especialidade)</li>
               <li>Colocar em observação (reflete no status)</li>
@@ -915,7 +897,7 @@
           </div>
 
           <div class="card span-4">
-            <h3><i class="fa-solid fa-user-gear"></i> 5.3 Administrador</h3>
+            <h3><i class="fa-solid fa-user-gear"></i> Administrador</h3>
             <ul class="list">
               <li>Configurar especialidades e divisões de fila</li>
               <li>Definir modelo de atribuição (A/B)</li>
@@ -924,28 +906,10 @@
             </ul>
           </div>
         </div>
-
-        <div style="margin-top:14px">
-          <details>
-            <summary>
-              <div class="sumLeft"><i class="fa-solid fa-rotate-left"></i> Reversibilidade (funcionalidade nativa)</div>
-              <div class="sumRight">Ver detalhes <i class="fa-solid fa-chevron-down chev"></i></div>
-            </summary>
-            <div class="content">
-              A capacidade de desfazer e retornar estados é parte do desenho do MVP. Casos típicos:
-              <ul>
-                <li>Retornar senha chamada para a fila (Chamado → Aguardando)</li>
-                <li>Remover/cancelar senha antes do registro (Aguardando/Chamado → Cancelado/Removido)</li>
-                <li>Reabrir atendimento finalizado (Finalizado → Encaminhado ao Médico)</li>
-                <li>Finalizar pelo recepcionista quando o médico esquece (Encaminhado → Finalizado)</li>
-              </ul>
-            </div>
-          </details>
-        </div>
       </div>
     </section>
 
-    <!-- 6. Prioridade e Base Legal -->
+    <!-- 6. Prioridade -->
     <section class="section" id="prioridade">
       <div class="wrap">
         <div class="sectionHeader">
@@ -957,31 +921,28 @@
 
         <div class="grid">
           <div class="card span-7">
-            <h3><i class="fa-solid fa-scale-balanced"></i> 6.1 Referências legais (alto nível)</h3>
+            <h3><i class="fa-solid fa-scale-balanced"></i> Referências legais (alto nível)</h3>
             <ul class="list">
-              <li>Lei nº 10.048/2000 — prioridade de atendimento (PCD, idosos 60+, gestantes, lactantes, crianças de colo, obesos)</li>
-              <li>Decreto nº 5.296/2004 — regulamentação e detalhamento</li>
+              <li>Lei nº 10.048/2000 — prioridade de atendimento</li>
+              <li>Decreto nº 5.296/2004 — regulamentação</li>
               <li>Lei nº 13.146/2015 — Estatuto da Pessoa com Deficiência</li>
             </ul>
-            <div class="hint">
-              O objetivo do MVP é viabilizar conformidade com evidência, ordenação e trilha de auditoria.
-            </div>
           </div>
 
           <div class="card span-5">
-            <h3><i class="fa-solid fa-check-double"></i> 6.2 Requisitos do sistema</h3>
+            <h3><i class="fa-solid fa-check-double"></i> Requisitos de sistema</h3>
             <ul class="list">
               <li>Marcação de prioridade (manual ou automática por idade)</li>
-              <li>Evidência visual: ícones/tags no painel público e nos painéis operacionais</li>
-              <li>Ordenação: prioritário antes do não prioritário, com FIFO interno</li>
-              <li>Configurável: alternância (ex.: 1 prioritário a cada 3 não prioritários), sem ferir legislação</li>
+              <li>Evidência visual em todos os painéis</li>
+              <li>Ordenação: prioridade + FIFO</li>
+              <li>Regra configurável de alternância (opcional)</li>
             </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 7. Campos mínimos -->
+    <!-- 7. Campos -->
     <section class="section" id="dados">
       <div class="wrap">
         <div class="sectionHeader">
@@ -993,79 +954,141 @@
 
         <div class="grid">
           <div class="card span-4">
-            <h3><i class="fa-solid fa-ticket"></i> 7.1 Emissão de senha</h3>
+            <h3><i class="fa-solid fa-ticket"></i> Emissão / Entrada de Senha</h3>
             <ul class="list">
-              <li>Divisão/Especialidade (obrigatório)</li>
-              <li>Número da senha (auto ou digitado)</li>
+              <li>Divisão / Especialidade (obrigatório)</li>
+              <li>Número da senha</li>
               <li>Prioritário (Sim/Não)</li>
-              <li>Observação rápida (opcional)</li>
+              <li>Observações rápidas (opcional)</li>
             </ul>
           </div>
 
           <div class="card span-8">
-            <h3><i class="fa-solid fa-id-card"></i> 7.2 Registro de atendimento (recepção)</h3>
+            <h3><i class="fa-solid fa-id-card"></i> Registro de Atendimento (Recepção)</h3>
             <ul class="list">
-              <li><b>Paciente</b>: selecionar existente ou cadastro rápido</li>
-              <li><b>Cadastro rápido</b>: Nome, Data de Nascimento, CPF (opção “não informado” com responsável clínico obrigatório), Telefone</li>
-              <li><b>Dados adicionais (opcional)</b>: RG, CNS/SUS, raça/cor, etnia, profissão, nacionalidade, mãe, estado civil, cônjuge, endereço (CEP)</li>
-              <li><b>Foto 3x4</b> (opcional)</li>
-              <li><b>Especialidade</b> (herdada ou selecionada)</li>
-              <li><b>Médico responsável</b> (obrigatório ou opcional conforme modelo)</li>
-              <li><b>Procedimentos</b>: vincular (TUSS/SUS) com múltiplos por atendimento</li>
-              <li><b>Origem/Procedência</b>: convênio, particular, SUS, encaminhamento etc.</li>
-              <li>Status atualizado automaticamente para <b>Encaminhado ao Médico</b></li>
+              <li>Paciente existente ou cadastro rápido</li>
+              <li>Nome, Data de Nascimento, CPF (opção “não informado”), Telefone</li>
+              <li>Dados adicionais opcionais (RG, CNS/SUS, endereço via CEP etc.)</li>
+              <li>Foto 3x4 (opcional)</li>
+              <li>Especialidade (herdada ou selecionada)</li>
+              <li>Médico responsável (obrigatório ou opcional)</li>
+              <li>Procedimento(s) (TUSS/SUS) — múltiplos por atendimento</li>
+              <li>Origem/Procedência</li>
+              <li>Status automático: Encaminhado ao Médico</li>
             </ul>
           </div>
 
           <div class="card span-12">
-            <h3><i class="fa-solid fa-flag-checkered"></i> 7.3 Finalização (médico ou recepção)</h3>
+            <h3><i class="fa-solid fa-flag-checkered"></i> Finalização (Médico ou Recepção)</h3>
             <ul class="list">
-              <li>Hora de saída (obrigatório; auto-preenchida e editável)</li>
-              <li>Motivo/Justificativa (opcional: desistência, encaminhamento etc.)</li>
+              <li>Hora de Saída (obrigatório; auto-preenchida e editável)</li>
+              <li>Motivo/Justificativa (opcional)</li>
             </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 8. Regras de exceção -->
-    <section class="section" id="excecoes">
+    <!-- Carreta -->
+    <section class="section" id="carreta">
       <div class="wrap">
         <div class="sectionHeader">
           <div>
-            <h2>8) Regras de Exceção</h2>
-            <p>Casos reais do dia a dia com tratamento robusto e reversível, preservando rastreabilidade.</p>
+            <h2>Fluxo de Atendimento — Carreta da Saúde</h2>
+            <p>Jornada ampliada com cadastro robusto, confirmação configurável, especialidades/exames e fechamento diário.</p>
           </div>
         </div>
 
         <div class="grid">
+          <div class="card span-6">
+            <h3><i class="fa-solid fa-ticket-simple"></i> Geração de Senha</h3>
+            <ul class="list">
+              <li>Senha manual (azul normal, vermelho prioritária)</li>
+              <li>Totem futuro (tablet + impressora bluetooth)</li>
+              <li>Filas físicas separadas (registro x triagem)</li>
+              <li>Quantidade diária configurável (ex.: 150)</li>
+            </ul>
+          </div>
+
+          <div class="card span-6">
+            <h3><i class="fa-solid fa-address-card"></i> Chamada e Cadastro</h3>
+            <ul class="list">
+              <li>Chamada sequencial (normal e preferencial)</li>
+              <li>Fila única nesta etapa (normal x preferencial)</li>
+              <li>Cadastro: CPF, SUS, endereço via CEP, foto e anexos</li>
+              <li>Convênio: Prefeitura Duque de Caxias</li>
+              <li>Encaminhamento: clínico geral</li>
+              <li>Impressão de ficha/termos</li>
+            </ul>
+          </div>
+
           <div class="card span-12">
-            <details open>
-              <summary>
-                <div class="sumLeft"><i class="fa-solid fa-triangle-exclamation"></i> Casos de exceção — MVP</div>
-                <div class="sumRight">Recolher/expandir <i class="fa-solid fa-chevron-down chev"></i></div>
-              </summary>
-              <div class="content">
-                <ul>
-                  <li><b>Desistência antes de ser chamado</b>: Recepção usa “Remover/Cancelar Senha” (Aguardando/Chamado → Cancelado/Removido).</li>
-                  <li><b>Desistência após registro (antes do médico)</b>: atendimento pode ser finalizado pela recepção com justificativa (ex.: “Desistência”) e ser reaberto se o paciente retornar.</li>
-                  <li><b>Não Compareceu reversível</b>: “Marcar Não Compareceu” deve permitir “Desfazer Não Compareceu” para correções.</li>
-                  <li><b>Finalizado reversível</b>: recepção e médico podem “Reabrir Atendimento” (Finalizado → Encaminhado) para corrigir finalizações incorretas.</li>
-                  <li><b>CID e Motivo</b>: recomendável lista de motivos e CID no encerramento; CID obrigatório quando encerrado pelo médico.</li>
-                </ul>
-              </div>
-            </details>
+            <h3><i class="fa-solid fa-user-doctor"></i> Atendimento, Confirmação, Especialidades e Fechamento</h3>
+            <ul class="list">
+              <li>Atendimento clínico com registro em prontuário e cobrança por procedimento</li>
+              <li>Confirmação de encaminhamento configurável (ativa/inativa)</li>
+              <li>Especialidades/exames com reencaminhamentos</li>
+              <li>Relatório do fluxo do paciente para assinatura (parâmetro imprime/não imprime)</li>
+              <li>Relatório de produção por médico + fechamento diário para prestação de contas</li>
+              <li>Parâmetros de repasse médico (plantão ou produtividade)</li>
+            </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 9. Tabela de permissões -->
+    <!-- 10. Algoritmo -->
+    <section class="section" id="algoritmo">
+      <div class="wrap">
+        <div class="sectionHeader">
+          <div>
+            <h2>Motor de Chamada e Ordenação</h2>
+            <p>Filtragem por especialidade/divisão, prioridade legal/operacional e FIFO por timestamp, com logs e baixa latência.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card span-6">
+            <h3><i class="fa-solid fa-arrow-right-to-bracket"></i> Entradas</h3>
+            <ul class="list">
+              <li>Especialidade/Divisão</li>
+              <li>Conjunto elegível (Aguardando / Encaminhado)</li>
+              <li>Flags de prioridade</li>
+              <li>Timestamps</li>
+              <li>Filtros por perfil (médico por especialidade)</li>
+            </ul>
+          </div>
+
+          <div class="card span-6">
+            <h3><i class="fa-solid fa-gears"></i> Regras</h3>
+            <ul class="list">
+              <li>Filtrar sempre por especialidade/divisão</li>
+              <li>Prioridade primeiro</li>
+              <li>FIFO dentro de cada grupo</li>
+              <li>Regras configuráveis: alternância, limites, desempate</li>
+              <li>Ações manuais permitidas, sempre auditadas</li>
+            </ul>
+          </div>
+
+          <div class="card span-12">
+            <h3><i class="fa-solid fa-shield"></i> Saídas e não funcionais</h3>
+            <ul class="list">
+              <li>Próxima senha recomendada + lista ordenada</li>
+              <li>Eventos/logs por chamada e alteração</li>
+              <li>Atualização de painéis</li>
+              <li>Baixa latência • Consistência • Prevenção de dupla chamada</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Permissões -->
     <section class="section" id="permissoes">
       <div class="wrap">
         <div class="sectionHeader">
           <div>
-            <h2>9) Tabela de Permissões (Resumo Operacional)</h2>
+            <h2>Tabela de Permissões (Resumo Operacional)</h2>
             <p>Matriz de permissões por perfil. Base para configuração e governança de acessos.</p>
           </div>
         </div>
@@ -1113,13 +1136,6 @@
                     <td data-label="Observações" class="notes">Vincula senha ao paciente e encaminha para fila médica.</td>
                   </tr>
                   <tr>
-                    <td data-label="Ação"><b>Marcar/Desfazer Não Compareceu</b></td>
-                    <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
-                    <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
-                    <td data-label="Admin"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
-                    <td data-label="Observações" class="notes">Previsto com evolução de integração com agenda.</td>
-                  </tr>
-                  <tr>
                     <td data-label="Ação"><b>Remover/Cancelar Senha</b></td>
                     <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
                     <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
@@ -1127,211 +1143,40 @@
                     <td data-label="Observações" class="notes">Remove senha do fluxo antes do registro/início.</td>
                   </tr>
                   <tr>
-                    <td data-label="Ação"><b>Retornar Senha para Fila</b></td>
-                    <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
-                    <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
-                    <td data-label="Admin"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
-                    <td data-label="Observações" class="notes">Chamado → Aguardando (quando paciente não aparece no guichê).</td>
-                  </tr>
-                  <tr>
                     <td data-label="Ação"><b>Tornar/Remover Prioridade</b></td>
                     <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
                     <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
                     <td data-label="Admin"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
-                    <td data-label="Observações" class="notes">Impacta ordenação nas filas e evidência visual.</td>
+                    <td data-label="Observações" class="notes">Impacta ordenação e evidência visual.</td>
                   </tr>
                   <tr>
                     <td data-label="Ação"><b>Chamar Paciente (Médico)</b></td>
                     <td data-label="Recepção"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
                     <td data-label="Médico"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
                     <td data-label="Admin"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
-                    <td data-label="Observações" class="notes">Encaminhado → Em Atendimento (fila filtrada por especialidade).</td>
+                    <td data-label="Observações" class="notes">Fila filtrada por especialidade.</td>
                   </tr>
                   <tr>
-                    <td data-label="Ação"><b>Colocar em Observação</b></td>
-                    <td data-label="Recepção"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
-                    <td data-label="Médico"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
-                    <td data-label="Admin"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
-                    <td data-label="Observações" class="notes">Executada no prontuário e refletida no status.</td>
-                  </tr>
-                  <tr>
-                    <td data-label="Ação"><b>Finalizar Atendimento (Médico)</b></td>
-                    <td data-label="Recepção"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
-                    <td data-label="Médico"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
-                    <td data-label="Admin"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
-                    <td data-label="Observações" class="notes">Registra hora de saída; base para relatórios.</td>
-                  </tr>
-                  <tr>
-                    <td data-label="Ação"><b>Finalizar pela Recepção</b></td>
-                    <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
-                    <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
-                    <td data-label="Admin"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
-                    <td data-label="Observações" class="notes">Encaminhado → Finalizado (quando médico não finaliza).</td>
-                  </tr>
-                  <tr>
-                    <td data-label="Ação"><b>Reabrir (Finalizado → Encaminhado)</b></td>
+                    <td data-label="Ação"><b>Finalizar / Reabrir Atendimento</b></td>
                     <td data-label="Recepção"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
                     <td data-label="Médico"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
                     <td data-label="Admin"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
-                    <td data-label="Observações" class="notes">Correção de finalizações incorretas / retomada de atendimento.</td>
+                    <td data-label="Observações" class="notes">Finalização com hora de saída; reabertura por correção/retomada.</td>
                   </tr>
                   <tr>
-                    <td data-label="Ação"><b>Configurar Especialidades/Filas</b></td>
+                    <td data-label="Ação"><b>Configurar Filas/Prioridade/Permissões</b></td>
                     <td data-label="Recepção"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
                     <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
                     <td data-label="Admin"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
-                    <td data-label="Observações" class="notes">Gestão de dados mestres e divisão de filas.</td>
-                  </tr>
-                  <tr>
-                    <td data-label="Ação"><b>Configurar Regras de Prioridade/Permissões</b></td>
-                    <td data-label="Recepção"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
-                    <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
-                    <td data-label="Admin"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
-                    <td data-label="Observações" class="notes">Define ordenação, alternância e governança de acesso.</td>
+                    <td data-label="Observações" class="notes">Administração de dados mestres e governança de acesso.</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
             <div class="hint" style="margin-top:12px">
-              Recomendação: toda ação manual (chamar senha específica, alterar prioridade, reabrir/finalizar por exceção) deve gerar log para auditoria e rastreabilidade.
+              Recomendação: toda ação manual (chamar senha específica, alterar prioridade, reabrir/finalizar por exceção) deve gerar log para auditoria.
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 10. Algoritmo -->
-    <section class="section" id="algoritmo">
-      <div class="wrap">
-        <div class="sectionHeader">
-          <div>
-            <h2>10) Especificação do Algoritmo de Chamada</h2>
-            <p>Motor de ordenação com filtragem por especialidade/divisão, prioridade legal/operacional e FIFO por timestamp, com baixa latência e consistência.</p>
-          </div>
-        </div>
-
-        <div class="grid">
-          <div class="card span-6">
-            <h3><i class="fa-solid fa-arrow-right-to-bracket"></i> 10.1 Entradas</h3>
-            <ul class="list">
-              <li>Especialidade/Divisão (filtro da fila)</li>
-              <li>Conjunto elegível (Aguardando / Encaminhado)</li>
-              <li>Flags de prioridade (legal/operacional)</li>
-              <li>Timestamps (criação e entrada no estado)</li>
-              <li>Perfil do operador (médico vê apenas suas especialidades)</li>
-            </ul>
-          </div>
-
-          <div class="card span-6">
-            <h3><i class="fa-solid fa-gears"></i> 10.2 Regras</h3>
-            <ul class="list">
-              <li>Filtrar sempre por especialidade/divisão</li>
-              <li>Ordenação primária: prioridade (legal/operacional)</li>
-              <li>Ordenação secundária: FIFO por tempo de entrada</li>
-              <li>Regras configuráveis: alternância, limites, desempate</li>
-              <li>Ações manuais permitidas, sempre logadas</li>
-            </ul>
-          </div>
-
-          <div class="card span-12">
-            <h3><i class="fa-solid fa-arrow-up-right-dots"></i> 10.3 Saídas + Não funcionais</h3>
-            <div class="grid">
-              <div class="card span-6" style="box-shadow:none; background:rgba(255,255,255,.02)">
-                <h3><i class="fa-solid fa-list-check"></i> Saídas</h3>
-                <ul class="list">
-                  <li>Próxima senha recomendada</li>
-                  <li>Lista ordenada visível ao operador</li>
-                  <li>Eventos/logs por chamada e alteração</li>
-                  <li>Atualização do painel público e painéis internos</li>
-                </ul>
-              </div>
-              <div class="card span-6" style="box-shadow:none; background:rgba(255,255,255,.02)">
-                <h3><i class="fa-solid fa-shield"></i> Requisitos não funcionais</h3>
-                <ul class="list">
-                  <li>Baixa latência (quase instantâneo)</li>
-                  <li>Consistência (mesma entrada → mesma saída)</li>
-                  <li>Auditoria completa</li>
-                  <li>Prevenção de dupla chamada (controle concorrente)</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Carreta -->
-    <section class="section" id="carreta">
-      <div class="wrap">
-        <div class="sectionHeader">
-          <div>
-            <h2>Fluxo de Atendimento — Carreta da Saúde</h2>
-            <p>Jornada ampliada com cadastro robusto, confirmação configurável, especialidades/exames e fechamento diário para prestação de contas.</p>
-          </div>
-        </div>
-
-        <div class="grid">
-          <div class="card span-6">
-            <h3><i class="fa-solid fa-ticket-simple"></i> 1) Geração de senha</h3>
-            <ul class="list">
-              <li>Senha manual (dispensadores físico: azul normal, vermelho prioritária)</li>
-              <li>Totem futuro (tablet + impressora bluetooth)</li>
-              <li>Filas físicas separadas (prioritário x normal; registro x triagem)</li>
-              <li>Limite configurável de senhas diárias (ex.: 150)</li>
-            </ul>
-          </div>
-
-          <div class="card span-6">
-            <h3><i class="fa-solid fa-address-card"></i> 2) Chamada e cadastro</h3>
-            <ul class="list">
-              <li>Chamada sequencial com botões: normal e preferencial</li>
-              <li>Fila única nesta etapa (normal x preferencial) com vários atendentes</li>
-              <li>Cadastro mínimo ampliado: CPF, SUS, endereço via CEP, sexo, telefone, nacionalidade, raça/cor</li>
-              <li>Foto via webcam e anexos (RG/CPF/CNH/comprovante) com classificação</li>
-              <li>Convênio padrão: Prefeitura Duque de Caxias; especialidade default: clínico geral</li>
-              <li>Emissão de ficha com dados e termos para assinatura</li>
-            </ul>
-          </div>
-
-          <div class="card span-12">
-            <h3><i class="fa-solid fa-user-doctor"></i> 3) Atendimento clínico</h3>
-            <ul class="list">
-              <li>Paciente entra na fila clínica após cadastro</li>
-              <li>Mais de um médico na mesma fila</li>
-              <li>Regra de alternância prioritária configurável (ex.: chamar 1 prioritário a cada X normais)</li>
-              <li>Registro no prontuário: anamnese, evolução, atestado, receituário, solicitação de exame externo</li>
-              <li>Atendimento computado para cobrança (tabela de procedimentos)</li>
-            </ul>
-          </div>
-
-          <div class="card span-6">
-            <h3><i class="fa-solid fa-square-check"></i> 4) Confirmação de encaminhamento (configurável)</h3>
-            <ul class="list">
-              <li>Etapa opcional: ativa/inativa por cliente</li>
-              <li>Atendente confirma dados e encaminhamento</li>
-              <li>Paciente entra na fila da especialidade/exame correspondente</li>
-              <li>Impressão de protocolo para lista de espera (dias seguintes)</li>
-            </ul>
-          </div>
-
-          <div class="card span-6">
-            <h3><i class="fa-solid fa-flask-vial"></i> 5) Especialidades / exames / procedimentos</h3>
-            <ul class="list">
-              <li>Profissional chama paciente e registra no prontuário</li>
-              <li>Pode finalizar ou encaminhar para nova especialidade/exame</li>
-              <li>Computa produção para cobrança por procedimento</li>
-            </ul>
-          </div>
-
-          <div class="card span-12">
-            <h3><i class="fa-solid fa-file-signature"></i> 6) Finalização, relatórios, repasse e fechamento</h3>
-            <ul class="list">
-              <li>Relatório automático do fluxo do paciente para assinatura (parâmetro imprime/não imprime)</li>
-              <li>Relatório de produção por médico no período</li>
-              <li>Parâmetros de repasse médico: por plantão ou produtividade, variando por especialidade/profissional</li>
-              <li>Fechamento diário: relatório detalhado para prestação de contas à prefeitura</li>
-            </ul>
           </div>
         </div>
       </div>
@@ -1342,8 +1187,8 @@
       <div class="wrap">
         <div class="sectionHeader">
           <div>
-            <h2>Parâmetros e Configurações (Checklist de Go)</h2>
-            <p>Itens que precisam estar “setados” para operar com previsibilidade e rastreabilidade.</p>
+            <h2>Parâmetros e Configurações</h2>
+            <p>Itens que precisam estar configurados para operar com previsibilidade e rastreabilidade.</p>
           </div>
         </div>
 
@@ -1359,12 +1204,11 @@
           </div>
 
           <div class="card span-6">
-            <h3><i class="fa-solid fa-layer-group"></i> Dados mestres e limites</h3>
+            <h3><i class="fa-solid fa-layer-group"></i> Procedimentos e limites</h3>
             <ul class="list">
-              <li>Especialidades, divisões de fila e guichês</li>
               <li>Tabela de procedimentos com grupo/classificação</li>
-              <li>Limite máximo por procedimento/grupo por período e convênio (mensal/anual/personalizado)</li>
-              <li>Regras de prioridade (legal/operacional) e alternância</li>
+              <li>Limite por procedimento/grupo por período e convênio</li>
+              <li>Regras de prioridade e alternância</li>
             </ul>
           </div>
 
@@ -1383,7 +1227,7 @@
       <div class="wrap">
         <div class="line">
           <div>
-            <b style="color: rgba(255,255,255,.82);">MVP Fluxo de Atendimento</b>
+            <b style="color: rgba(255,255,255,.82);">Fluxo de Atendimento</b>
             <div style="margin-top:4px">Documento de apresentação — versão HTML responsiva para Kickoff/Onboarding.</div>
           </div>
           <div>
@@ -1396,7 +1240,6 @@
   </main>
 
   <script>
-    // Active nav highlight on scroll (simple + robust)
     const chips = Array.from(document.querySelectorAll(".chip"));
     const sections = chips
       .map(a => document.querySelector(a.getAttribute("href")))
@@ -1417,7 +1260,6 @@
 
     sections.forEach(s => obs.observe(s));
 
-    // Smooth anchor offset for sticky header
     chips.forEach(a => {
       a.addEventListener("click", (ev) => {
         const href = a.getAttribute("href");
