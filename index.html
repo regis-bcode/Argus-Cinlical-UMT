@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Fluxo de Atendimento — Emissão de Senhas, Painéis, Registro e Encaminhamento</title>
+  <title>Fluxo de Atendimento — Senhas, Painéis, Registro e Encaminhamento</title>
 
   <!-- Icons (Font Awesome) -->
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
@@ -47,6 +47,8 @@
 
     a{color:inherit; text-decoration:none}
     .wrap{max-width:var(--max); margin:0 auto; padding: 0 20px}
+
+    /* Sticky header */
     .topbar{
       position: sticky; top:0; z-index:50;
       backdrop-filter: var(--glass);
@@ -58,7 +60,6 @@
       padding: 12px 0;
       gap: 14px;
     }
-
     .brand{
       display:flex; align-items:center; gap: 12px; min-width: 240px;
     }
@@ -72,14 +73,10 @@
       display:grid; place-items:center;
     }
     .brand .logo i{color: rgba(255,255,255,.9); font-size: 16px}
-    .brand .t{
-      display:flex; flex-direction:column; line-height:1.1;
-    }
+    .brand .t{display:flex; flex-direction:column; line-height:1.1;}
     .brand .t b{font-size: 14px; letter-spacing:.2px}
     .brand .t span{font-size: 12px; color: var(--muted)}
-    .nav{
-      display:flex; gap: 8px; align-items:center; flex-wrap:wrap; justify-content:flex-end;
-    }
+    .nav{display:flex; gap: 8px; align-items:center; flex-wrap:wrap; justify-content:flex-end;}
     .chip{
       padding: 8px 10px;
       border-radius: 999px;
@@ -99,10 +96,8 @@
       color: rgba(255,255,255,.90);
     }
 
-    .hero{
-      position:relative;
-      padding: 54px 0 24px;
-    }
+    /* Hero */
+    .hero{position:relative; padding: 54px 0 24px;}
     .heroGrid{
       display:grid;
       grid-template-columns: 1.25fr .75fr;
@@ -177,6 +172,7 @@
     }
     .btn.primary:hover{border-color: rgba(124,92,255,.65)}
     .btn i{opacity:.95}
+
     .sidecard{
       border-radius: var(--radius2);
       border: 1px solid var(--stroke);
@@ -212,10 +208,7 @@
     }
     .metaitem b{display:block; font-size: 12px; color: rgba(255,255,255,.85); margin-bottom: 6px}
     .metaitem span{display:block; font-size: 12px; color: var(--muted); line-height:1.35}
-
-    .badges{
-      display:flex; flex-wrap:wrap; gap: 8px; margin-top: 14px;
-    }
+    .badges{display:flex; flex-wrap:wrap; gap: 8px; margin-top: 14px;}
     .badge{
       font-size: 12px;
       padding: 8px 10px;
@@ -230,19 +223,14 @@
     .badge.warn{border-color: rgba(255,204,102,.35); background: rgba(255,204,102,.08)}
     .badge.acc{border-color: rgba(124,92,255,.35); background: rgba(124,92,255,.08)}
 
-    .section{
-      padding: 28px 0 18px;
-    }
+    /* Sections / cards */
+    .section{padding: 28px 0 18px;}
     .sectionHeader{
       display:flex; align-items:flex-end; justify-content:space-between;
       gap: 12px;
       margin-bottom: 14px;
     }
-    .sectionHeader h2{
-      margin:0;
-      font-size: 18px;
-      letter-spacing:.1px;
-    }
+    .sectionHeader h2{margin:0; font-size: 18px; letter-spacing:.1px;}
     .sectionHeader p{
       margin:0;
       color: var(--muted);
@@ -250,7 +238,6 @@
       max-width: 76ch;
       line-height:1.45;
     }
-
     .grid{
       display:grid;
       grid-template-columns: repeat(12, 1fr);
@@ -274,16 +261,15 @@
       pointer-events:none;
     }
     .card > *{position:relative}
-    .card h3{margin:0 0 10px; font-size: 14px; color: rgba(255,255,255,.88); display:flex; align-items:center; gap: 10px}
+    .card h3{
+      margin:0 0 10px;
+      font-size: 14px;
+      color: rgba(255,255,255,.88);
+      display:flex; align-items:center; gap: 10px;
+    }
     .card h3 i{color: rgba(255,255,255,.92)}
     .card p{margin:0; color: var(--muted); font-size: 13px; line-height: 1.55}
-    .list{
-      margin: 10px 0 0;
-      padding: 0 0 0 18px;
-      color: rgba(255,255,255,.74);
-      font-size: 13px;
-      line-height: 1.55;
-    }
+    .list{margin: 10px 0 0; padding: 0 0 0 18px; color: rgba(255,255,255,.74); font-size: 13px; line-height: 1.55;}
     .list li{margin: 6px 0}
     .hint{
       margin-top: 10px;
@@ -303,25 +289,36 @@
     .span-8{grid-column: span 8}
     .span-12{grid-column: span 12}
 
+    /* ====== STATES (CORRIGIDO: simetria, tags, indentação) ====== */
     .stateWrap{
       display:grid;
       grid-template-columns: 1fr;
       gap: 12px;
     }
+
     .states{
       display:grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
+
+      /* simetria por linha */
+      grid-auto-rows: 1fr;
+      align-items: stretch;
     }
+
     .state{
       border-radius: 16px;
       border: 1px solid var(--stroke);
       background: rgba(255,255,255,.03);
       padding: 12px;
-      min-height: 86px;
+
+      height: 100%;
+      min-height: 104px;
+
       display:flex;
       flex-direction:column;
-      gap: 8px;
+      gap: 10px;
+
       position:relative;
       overflow:hidden;
     }
@@ -333,30 +330,65 @@
       opacity:.9;
     }
     .state > *{position:relative}
+
     .state .top{
-      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
     }
+
     .state .name{
+      flex: 1 1 auto;
+      min-width: 0;
+
       font-weight: 700;
       font-size: 12.5px;
       color: rgba(255,255,255,.88);
       letter-spacing: .1px;
+      line-height: 1.25;
+
+      /* padroniza altura do título (até 2 linhas) */
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
     }
+
     .tag{
+      flex: 0 0 auto;
+      white-space: nowrap;
+
       font-size: 11px;
-      padding: 6px 8px;
+      line-height: 1;
+      padding: 7px 10px;
       border-radius: 999px;
+
       border: 1px solid var(--stroke);
       background: rgba(255,255,255,.03);
       color: rgba(255,255,255,.72);
-      white-space:nowrap;
+
+      max-width: 42%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 6px;
     }
+    .tag i{font-size: 11px; line-height: 1; opacity: .95;}
+
     .tag.acc{border-color: rgba(124,92,255,.35); background: rgba(124,92,255,.08)}
     .tag.good{border-color: rgba(46,229,157,.35); background: rgba(46,229,157,.08)}
     .tag.warn{border-color: rgba(255,204,102,.35); background: rgba(255,204,102,.08)}
     .tag.bad{border-color: rgba(255,92,122,.35); background: rgba(255,92,122,.08)}
+
     .state .desc{
-      font-size: 12px; color: var(--muted); line-height: 1.45;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+      margin: 0;
     }
 
     .transitions{
@@ -384,6 +416,7 @@
     .kvi span{display:block; font-size: 12px; color: var(--muted); line-height:1.4}
     .mono{font-family:var(--mono)}
 
+    /* Accordions */
     details{
       border-radius: 18px;
       border: 1px solid var(--stroke);
@@ -422,17 +455,14 @@
     .content ul{margin: 8px 0 0; padding-left: 18px}
     .content li{margin: 6px 0}
 
+    /* Table */
     .tableWrap{
       border-radius: 18px;
       border: 1px solid var(--stroke);
       background: rgba(255,255,255,.03);
       overflow:hidden;
     }
-    table{
-      width:100%;
-      border-collapse: collapse;
-      font-size: 12.5px;
-    }
+    table{width:100%; border-collapse: collapse; font-size: 12.5px;}
     thead th{
       text-align:left;
       padding: 12px 12px;
@@ -446,9 +476,7 @@
       color: rgba(255,255,255,.75);
       vertical-align:top;
     }
-    tbody tr:hover td{
-      background: rgba(255,255,255,.02);
-    }
+    tbody tr:hover td{background: rgba(255,255,255,.02);}
     .permit{
       display:inline-flex; align-items:center; gap:8px;
       padding: 6px 10px;
@@ -460,17 +488,10 @@
     }
     .yes{border-color: rgba(46,229,157,.40); background: rgba(46,229,157,.08); color: rgba(255,255,255,.84)}
     .no{border-color: rgba(255,92,122,.35); background: rgba(255,92,122,.08); color: rgba(255,255,255,.82)}
-    .notes{
-      color: rgba(255,255,255,.62);
-      font-size: 12px;
-      line-height:1.45;
-    }
+    .notes{color: rgba(255,255,255,.62); font-size: 12px; line-height:1.45;}
 
-    .footer{
-      padding: 28px 0 34px;
-      color: rgba(255,255,255,.62);
-      font-size: 12px;
-    }
+    /* Footer */
+    .footer{padding: 28px 0 34px; color: rgba(255,255,255,.62); font-size: 12px;}
     .footer .line{
       border-top: 1px solid rgba(255,255,255,.10);
       padding-top: 14px;
@@ -486,10 +507,12 @@
       color: rgba(255,255,255,.75);
     }
 
+    /* Responsive */
     @media (max-width: 980px){
       .heroGrid{grid-template-columns: 1fr}
       .brand{min-width:auto}
-      .states{grid-template-columns: repeat(2, 1fr)}
+      .states{grid-template-columns: repeat(2, minmax(0, 1fr))}
+      .tag{max-width: 50%;}
       .kv{grid-template-columns: 1fr}
       .span-4,.span-5,.span-6,.span-7,.span-8,.span-12{grid-column: span 12}
       .nav{justify-content:flex-start}
@@ -497,6 +520,7 @@
     }
     @media (max-width: 560px){
       .states{grid-template-columns: 1fr}
+      .tag{max-width: 60%;}
       .chip{padding: 8px 9px}
       table{font-size: 12px}
       thead{display:none}
@@ -513,6 +537,7 @@
       }
     }
 
+    /* Print */
     @media print{
       .topbar, .heroActions, .btn, .chip {display:none !important}
       body{background:#fff; color:#111}
@@ -552,6 +577,7 @@
   </header>
 
   <main>
+    <!-- HERO -->
     <section class="hero">
       <div class="wrap">
         <div class="heroGrid">
@@ -565,14 +591,14 @@
             <p class="sub">
               Documento de apresentação com visão ponta-a-ponta: emissão de senhas, painéis de chamadas,
               registro administrativo, fila médica por especialidade (ou médico indicado), atendimento, observação,
-              finalização e reversões operacionais. Estruturado para alinhamento com stakeholders e execução com previsibilidade.
+              finalização e reversões operacionais.
             </p>
 
             <div class="heroActions">
-              <a class="btn primary" href="#objetivo"><i class="fa-solid fa-play"></i> Iniciar pelo objetivo</a>
-              <a class="btn" href="#estados"><i class="fa-solid fa-diagram-project"></i> Ver máquina de estados</a>
-              <a class="btn" href="#carreta"><i class="fa-solid fa-truck-medical"></i> Ver Carreta da Saúde</a>
-              <a class="btn" href="#permissoes"><i class="fa-solid fa-table"></i> Ver permissões</a>
+              <a class="btn primary" href="#objetivo"><i class="fa-solid fa-play"></i> Iniciar</a>
+              <a class="btn" href="#estados"><i class="fa-solid fa-diagram-project"></i> Ver estados</a>
+              <a class="btn" href="#carreta"><i class="fa-solid fa-truck-medical"></i> Carreta da Saúde</a>
+              <a class="btn" href="#permissoes"><i class="fa-solid fa-table"></i> Permissões</a>
             </div>
           </div>
 
@@ -582,10 +608,10 @@
                 <div>
                   <div style="font-weight:800; letter-spacing:.2px;">Resumo executivo</div>
                   <div style="color:var(--muted); font-size:12.5px; margin-top:4px; line-height:1.45">
-                    Foco em velocidade operacional, máquina de estados explícita, flexibilidade para exceções e conformidade legal de prioridade.
+                    Velocidade operacional, máquina de estados explícita, flexibilidade para exceções e conformidade legal de prioridade.
                   </div>
                 </div>
-                <div class="tag acc"><i class="fa-solid fa-shield-heart" style="margin-right:6px"></i>Saúde</div>
+                <div class="tag acc"><i class="fa-solid fa-shield-heart"></i>Saúde</div>
               </div>
 
               <div class="meta">
@@ -607,7 +633,7 @@
             </div>
 
             <div class="hint">
-              Dica de apresentação: navegue pelo menu superior. O cabeçalho permanece visível e as seções são independentes, facilitando o storytelling.
+              Navegue pelo menu superior. O cabeçalho permanece visível e as seções são independentes para facilitar a apresentação.
             </div>
           </aside>
         </div>
@@ -620,7 +646,7 @@
         <div class="sectionHeader">
           <div>
             <h2>1) Objetivo e Escopo</h2>
-            <p>Baseline do produto para operação inicial: velocidade, clareza operacional e capacidade de desfazer ações (fluxo real de clínica).</p>
+            <p>Base operacional: agilidade, clareza de fluxo e capacidade de desfazer ações (dinâmica real de clínica).</p>
           </div>
         </div>
 
@@ -632,7 +658,7 @@
               reduzindo burocracia e cliques, com flexibilidade para reverter estados quando necessário.
             </p>
             <div class="hint">
-              Diretriz de produto: rapidez na recepção e no consultório + capacidade de desfazer/retornar ações para aderência à operação real.
+              Diretriz: rapidez na recepção e no consultório + reversões para aderência à operação real.
             </div>
           </div>
 
@@ -640,19 +666,19 @@
             <h3><i class="fa-solid fa-sitemap"></i> Escopo abrange</h3>
             <ul class="list">
               <li>Emissão de senhas para filas diversas</li>
-              <li>Chamada e registro administrativo (recepção)</li>
-              <li>Gerenciamento da fila de pacientes aguardando o médico</li>
+              <li>Chamada de senhas e registro administrativo do atendimento</li>
+              <li>Fila de pacientes aguardando o médico (por especialidade)</li>
               <li>Atendimento médico com observação e finalização (hora de saída)</li>
-              <li>Reversões: remover senha, retornar à fila, priorizar, reabrir atendimento</li>
-              <li>Recepção pode finalizar e reabrir; médico pode reabrir</li>
+              <li>Reversões: remover senha, retornar para fila, priorizar, desfazer não compareceu, reabrir</li>
+              <li>Recepção pode finalizar atendimentos e reverter estados; médico pode reabrir</li>
             </ul>
           </div>
 
           <div class="card span-12">
-            <h3><i class="fa-solid fa-lock"></i> Regra estrutural de fila médica</h3>
+            <h3><i class="fa-solid fa-lock"></i> Regra estrutural da fila médica</h3>
             <p>
-              A fila de atendimento médico deve obedecer estritamente ao critério de <b>especialidade</b>, não sendo uma fila única genérica.
-              Alternativamente, pode operar por <b>médico indicado</b> (configurável), conforme o modelo de atribuição adotado.
+              A fila médica obedece ao critério de <b>especialidade</b>, evitando fila genérica.
+              Alternativamente, pode operar por <b>médico indicado</b> (configurável) conforme modelo de atribuição.
             </p>
           </div>
         </div>
@@ -665,62 +691,62 @@
         <div class="sectionHeader">
           <div>
             <h2>2) Princípios de Desenho</h2>
-            <p>Princípios não negociáveis para garantir eficiência operacional, previsibilidade e governança do fluxo.</p>
+            <p>Princípios não negociáveis para eficiência, previsibilidade e governança do fluxo.</p>
           </div>
         </div>
 
         <div class="grid">
           <div class="card span-4">
             <h3><i class="fa-solid fa-bolt"></i> Simplicidade e velocidade</h3>
-            <p>Interface intuitiva e com poucos cliques para ações recorrentes, minimizando tempo de espera e fricção operacional.</p>
+            <p>Interface intuitiva, poucos cliques e fluidez operacional para reduzir tempo de espera e fricção.</p>
           </div>
 
           <div class="card span-4">
             <h3><i class="fa-solid fa-diagram-project"></i> Máquina de estados explícita</h3>
-            <p>Fluxo gerenciado por estados bem definidos e transições controladas, evitando “zonas cinzentas” na operação.</p>
+            <p>Estados e transições controladas, garantindo clareza operacional e auditabilidade.</p>
           </div>
 
           <div class="card span-4">
             <h3><i class="fa-solid fa-rotate-left"></i> Flexibilidade operacional</h3>
-            <p>Desfazer/retornar/reverter é funcionalidade nativa e essencial, refletindo a imprevisibilidade do atendimento em saúde.</p>
+            <p>Desfazer e retornar ações como recurso nativo, refletindo a dinâmica real do atendimento em saúde.</p>
           </div>
 
           <div class="card span-12">
             <h3><i class="fa-solid fa-stethoscope"></i> Fila médica por especialidade</h3>
-            <p>Encaminhamento e chamada obedecem especialidade, garantindo aderência operacional (plantão) e evitando sobrecarga de fila genérica.</p>
+            <p>Encaminhamento e chamada obedecem especialidade (ou médico indicado), evitando sobrecarga de fila genérica.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 3. Estrutura de Filas -->
+    <!-- 3. Filas -->
     <section class="section" id="filas">
       <div class="wrap">
         <div class="sectionHeader">
           <div>
             <h2>3) Estrutura de Filas</h2>
-            <p>Separação entre entrada (recepção) e encaminhamento (fila médica), com modelo de atribuição configurável.</p>
+            <p>Separação entre recepção (entrada) e fila médica (encaminhamento), com modelos configuráveis.</p>
           </div>
         </div>
 
         <div class="grid">
           <div class="card span-6">
-            <h3><i class="fa-solid fa-ticket"></i> 3.1 Filas de senha na recepção</h3>
+            <h3><i class="fa-solid fa-ticket"></i> 3.1 Filas na recepção</h3>
             <ul class="list">
-              <li><b>Divisões</b>: por especialidade (recomendado), tipo de senha ou guichê</li>
-              <li><b>Operação</b>: chamar próximo (ordem/prioridade) ou chamar senha específica</li>
-              <li><b>Uso</b>: múltiplos atendentes operando nas mesmas filas</li>
+              <li>Divisões configuráveis: especialidade (recomendado), tipo de senha ou guichê</li>
+              <li>Operação: chamar próximo (prioridade/ordem) ou chamar senha específica</li>
+              <li>Suporta múltiplos atendentes na mesma fila</li>
             </ul>
           </div>
 
           <div class="card span-6">
-            <h3><i class="fa-solid fa-user-doctor"></i> 3.2 Fila para atendimento médico</h3>
+            <h3><i class="fa-solid fa-user-doctor"></i> 3.2 Fila médica</h3>
             <ul class="list">
-              <li><b>Critério de especialidade</b>: paciente só é visível/chamável por médicos da especialidade</li>
-              <li><b>Segmentação</b>: fila “Encaminhado ao Médico” filtrada por especialidade (baseline)</li>
+              <li>Critério de especialidade: paciente só é visível/chamável por médicos daquela especialidade</li>
+              <li>Segmentação: “Encaminhado ao Médico” sempre filtrado por especialidade</li>
             </ul>
             <div class="hint">
-              Atribuição pode ser por plantão (qualquer médico da especialidade) ou por médico responsável, conforme parâmetro.
+              Modelo de atribuição pode ser por plantão (especialidade) ou médico responsável, conforme parâmetro.
             </div>
           </div>
 
@@ -728,12 +754,12 @@
             <h3><i class="fa-solid fa-sliders"></i> Modelos de atribuição médica</h3>
             <div class="grid">
               <div class="card span-6" style="box-shadow:none; background:rgba(255,255,255,.02)">
-                <h3><i class="fa-solid fa-layer-group"></i> Modelo A — Especialidade + médico opcional</h3>
-                <p>Clínicas com plantão: paciente pode ser atendido por qualquer médico disponível da especialidade. Seleção de médico não é obrigatória.</p>
+                <h3><i class="fa-solid fa-layer-group"></i> Modelo A — médico opcional</h3>
+                <p>Plantão: paciente atendido por qualquer médico disponível da especialidade; seleção de médico não é obrigatória.</p>
               </div>
               <div class="card span-6" style="box-shadow:none; background:rgba(255,255,255,.02)">
-                <h3><i class="fa-solid fa-user-check"></i> Modelo B — Médico responsável obrigatório</h3>
-                <p>Clínicas com encaminhamento nominal: sistema exige seleção do médico no registro/encaminhamento.</p>
+                <h3><i class="fa-solid fa-user-check"></i> Modelo B — médico obrigatório</h3>
+                <p>Encaminhamento nominal: exige seleção do médico no registro/encaminhamento.</p>
               </div>
             </div>
           </div>
@@ -741,13 +767,13 @@
       </div>
     </section>
 
-    <!-- 4. Máquina de Estados -->
+    <!-- 4. Estados -->
     <section class="section" id="estados">
       <div class="wrap">
         <div class="sectionHeader">
           <div>
             <h2>4) Máquina de Estados</h2>
-            <p>Estados mínimos, estados futuros previstos e transições-chave por perfil. Base para governança e auditoria.</p>
+            <p>Estados mínimos, estados futuros previstos e transições-chave por perfil, com simetria e legibilidade.</p>
           </div>
         </div>
 
@@ -762,7 +788,7 @@
                     <div class="name">Aguardando (Recepção)</div>
                     <div class="tag acc">Entrada</div>
                   </div>
-                  <div class="desc">Senha emitida e aguardando chamada pela recepção.</div>
+                  <p class="desc">Senha emitida e aguardando chamada pela recepção.</p>
                 </div>
 
                 <div class="state">
@@ -770,7 +796,7 @@
                     <div class="name">Chamado (Recepção)</div>
                     <div class="tag warn">Chamada</div>
                   </div>
-                  <div class="desc">Senha chamada; aguardando apresentação para registro.</div>
+                  <p class="desc">Senha chamada; aguardando apresentação para registro.</p>
                 </div>
 
                 <div class="state">
@@ -778,7 +804,7 @@
                     <div class="name">Em Registro (Recepção)</div>
                     <div class="tag acc">Transição</div>
                   </div>
-                  <div class="desc">Registro administrativo (estado rápido de transição).</div>
+                  <p class="desc">Registro administrativo (estado rápido de transição).</p>
                 </div>
 
                 <div class="state">
@@ -786,7 +812,7 @@
                     <div class="name">Encaminhado ao Médico</div>
                     <div class="tag acc">Fila médica</div>
                   </div>
-                  <div class="desc">Aguardando chamada do médico na fila da especialidade.</div>
+                  <p class="desc">Aguardando chamada do médico na fila da especialidade.</p>
                 </div>
 
                 <div class="state">
@@ -794,7 +820,7 @@
                     <div class="name">Em Atendimento (Médico)</div>
                     <div class="tag good">Em execução</div>
                   </div>
-                  <div class="desc">Paciente em atendimento médico.</div>
+                  <p class="desc">Paciente em atendimento médico.</p>
                 </div>
 
                 <div class="state">
@@ -802,7 +828,7 @@
                     <div class="name">Em Observação</div>
                     <div class="tag warn">Monitoramento</div>
                   </div>
-                  <div class="desc">Paciente colocado em observação pelo médico.</div>
+                  <p class="desc">Paciente colocado em observação pelo médico.</p>
                 </div>
 
                 <div class="state">
@@ -810,7 +836,7 @@
                     <div class="name">Finalizado</div>
                     <div class="tag good">Saída</div>
                   </div>
-                  <div class="desc">Atendimento concluído com hora de saída registrada.</div>
+                  <p class="desc">Atendimento concluído com hora de saída registrada.</p>
                 </div>
 
                 <div class="state">
@@ -818,15 +844,15 @@
                     <div class="name">Não Compareceu</div>
                     <div class="tag bad">Exceção</div>
                   </div>
-                  <div class="desc">Paciente não se apresentou após chamado pelo médico.</div>
+                  <p class="desc">Paciente não se apresentou após chamado pelo médico.</p>
                 </div>
 
                 <div class="state">
                   <div class="top">
-                    <div class="name">Cancelado/Removido</div>
+                    <div class="name">Cancelado/Removido da Fila</div>
                     <div class="tag bad">Exceção</div>
                   </div>
-                  <div class="desc">Senha removida do fluxo sem iniciar atendimento.</div>
+                  <p class="desc">Senha removida do fluxo sem iniciar atendimento.</p>
                 </div>
               </div>
 
@@ -869,7 +895,7 @@
         <div class="sectionHeader">
           <div>
             <h2>5) Ações por Perfil</h2>
-            <p>Distribuição de capabilities por perfil, com destaque para reversões e reabertura.</p>
+            <p>Distribuição de capabilities por perfil, com ênfase em reversões e reabertura.</p>
           </div>
         </div>
 
@@ -915,7 +941,7 @@
         <div class="sectionHeader">
           <div>
             <h2>6) Prioridade / Senha Preferencial (Brasil)</h2>
-            <p>Requisito legal e operacional. Sistema deve suportar marcação, evidência visual, ordenação e auditoria.</p>
+            <p>Requisito legal e operacional com evidência visual, ordenação e auditoria.</p>
           </div>
         </div>
 
@@ -935,7 +961,7 @@
               <li>Marcação de prioridade (manual ou automática por idade)</li>
               <li>Evidência visual em todos os painéis</li>
               <li>Ordenação: prioridade + FIFO</li>
-              <li>Regra configurável de alternância (opcional)</li>
+              <li>Alternância configurável (opcional) sem ferir legislação</li>
             </ul>
           </div>
         </div>
@@ -1037,13 +1063,13 @@
       </div>
     </section>
 
-    <!-- 10. Algoritmo -->
+    <!-- Algoritmo -->
     <section class="section" id="algoritmo">
       <div class="wrap">
         <div class="sectionHeader">
           <div>
             <h2>Motor de Chamada e Ordenação</h2>
-            <p>Filtragem por especialidade/divisão, prioridade legal/operacional e FIFO por timestamp, com logs e baixa latência.</p>
+            <p>Filtragem por especialidade/divisão, prioridade e FIFO por timestamp, com logs e baixa latência.</p>
           </div>
         </div>
 
@@ -1071,7 +1097,7 @@
           </div>
 
           <div class="card span-12">
-            <h3><i class="fa-solid fa-shield"></i> Saídas e não funcionais</h3>
+            <h3><i class="fa-solid fa-shield"></i> Saídas e requisitos não funcionais</h3>
             <ul class="list">
               <li>Próxima senha recomendada + lista ordenada</li>
               <li>Eventos/logs por chamada e alteração</li>
@@ -1083,7 +1109,7 @@
       </div>
     </section>
 
-    <!-- 9. Permissões -->
+    <!-- Permissões -->
     <section class="section" id="permissoes">
       <div class="wrap">
         <div class="sectionHeader">
@@ -1168,7 +1194,7 @@
                     <td data-label="Recepção"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
                     <td data-label="Médico"><span class="permit no"><i class="fa-solid fa-xmark"></i> Não</span></td>
                     <td data-label="Admin"><span class="permit yes"><i class="fa-solid fa-check"></i> Permitido</span></td>
-                    <td data-label="Observações" class="notes">Administração de dados mestres e governança de acesso.</td>
+                    <td data-label="Observações" class="notes">Gestão de dados mestres e governança de acesso.</td>
                   </tr>
                 </tbody>
               </table>
@@ -1223,12 +1249,13 @@
       </div>
     </section>
 
+    <!-- Footer -->
     <section class="footer">
       <div class="wrap">
         <div class="line">
           <div>
             <b style="color: rgba(255,255,255,.82);">Fluxo de Atendimento</b>
-            <div style="margin-top:4px">Documento de apresentação — versão HTML responsiva para Kickoff/Onboarding.</div>
+            <div style="margin-top:4px">Documento de apresentação — HTML responsivo para Kickoff/Onboarding.</div>
           </div>
           <div>
             <span class="kbd">Ctrl</span> + <span class="kbd">F</span> para buscar termos •
@@ -1240,6 +1267,7 @@
   </main>
 
   <script>
+    // Active nav highlight on scroll
     const chips = Array.from(document.querySelectorAll(".chip"));
     const sections = chips
       .map(a => document.querySelector(a.getAttribute("href")))
@@ -1260,6 +1288,7 @@
 
     sections.forEach(s => obs.observe(s));
 
+    // Smooth anchor offset for sticky header
     chips.forEach(a => {
       a.addEventListener("click", (ev) => {
         const href = a.getAttribute("href");
